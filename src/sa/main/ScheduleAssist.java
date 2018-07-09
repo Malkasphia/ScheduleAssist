@@ -20,10 +20,10 @@ public class ScheduleAssist {
     public static void main(String[] args) {
         //Test DataBase Connection
         DBSelecter connect = new DBSelecter();
-        connect.startConnecting();
         //Username Login Process
         System.out.println("Welcome to Schedule Assist V 0.1");
-        ScheduleAssist.startLogin();
+        
+        ScheduleAssist.startLogin(connect);
       
 
 
@@ -33,12 +33,13 @@ public class ScheduleAssist {
     
 
     
-    private static void startLogin () {
+    private static void startLogin (DBSelecter dataBaseQueried) {
         //User enters Username
         Scanner scanner = new Scanner (System.in);
         System.out.println("Please enter user login name");
         String userLoginName = scanner.nextLine();
-        // Check Database for User Login. This is done by DBSelector returning the information and checking for a match again the userLoginName
+        //Check Database for User Login. This is done by DBSelector returning the information and checking for a match again the userLoginName
+        dataBaseQueried.userDBGet(userLoginName);
         
         
         
