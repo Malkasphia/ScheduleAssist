@@ -44,19 +44,16 @@ public void userDBGet (String userInput) {
                 
                 if (userName.equals(userInput)){
                     System.out.println("Welcome" + " " + userInput);
-                    
+                    break;
                 }
                 else {
                     Alert = true;
-                }
+                    }
 
-                
-
-                    
-              
-            }
+                            }
                    if (Alert) {
                     System.out.println("User not found, please enter a valid username" );
+                    
                 }
             
         } catch (SQLException ex) {
