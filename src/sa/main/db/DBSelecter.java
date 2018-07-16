@@ -1,5 +1,6 @@
 package sa.main.db;
 
+
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -7,9 +8,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.application.Platform;
+
+
 public class DBSelecter {
     //Class Members
+    //private static DBConnector Connector = new DBConnector();
     private static Connection conn = null;
+    
     
     //Class Methods
     //Connect to the Database, run 1st as it gets connection from Driver Manager
@@ -34,32 +42,37 @@ return DBSelecter.conn;
 }
 
 //Select Users from Database to validate login
-public void userDBGet (String userInput) {
+public boolean userDBGet (String userInputName, String userInputPassword) {
     //comment
         startConnecting();
         try (Statement stmt = conn.createStatement()) {
-            boolean Alert = false;
+            boolean noMatchingFound = false;
             ResultSet rs = stmt.executeQuery("Select * from user");
             while (rs.next()){
                 String userName = rs.getString("userName");
+                String userPassword = rs.getString("password");
                 
-                if (userName.equals(userInput)){
-                    System.out.println("Welcome" + " " + userInput);
+                if (userName.equals(userInputName) && userPassword.equals(userInputPassword)) {
+                    System.out.println("Welcome" + " " + userInputName);
                     break;
                 }
                 else {
-                    Alert = true;
+                    noMatchingFound = true;
                     }
 
                             }
-                   if (Alert) {
-                    System.out.println("User not found, please enter a valid username" );
+                   if (noMatchingFound) {
+                    System.out.println("Username and Password did not match. Please re-enter Username and Password.");
+                    
+                    
+                    return false;
                     
                 }
             
         } catch (SQLException ex) {
             Logger.getLogger(DBSelecter.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return true;
 }
 }
 
