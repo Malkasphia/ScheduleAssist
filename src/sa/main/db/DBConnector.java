@@ -14,9 +14,9 @@ import java.sql.SQLException;
  * @author Mal
  */
 public class DBConnector {
-    private Connection conn = null;
+    private static Connection conn = null;
     
-    public Connection startConnecting () {
+    public static Connection startConnecting () {
         String db = "U03lO7";
         String url = "jdbc:mysql://52.206.157.109/" + db;
         String user = "U03lO7";

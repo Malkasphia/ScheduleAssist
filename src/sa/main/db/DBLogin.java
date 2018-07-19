@@ -13,39 +13,17 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.application.Platform;
 
 
-public class DBSelecter {
+public class DBLogin {
     //Class Members
-    //private static DBConnector Connector = new DBConnector();
-    private static Connection conn = null;
-    
-    
+    //Static DBConnector used to connect to database and provide Connection object for statements
+    private static DBConnector Connector;
     //Class Methods
     //Connect to the Database, run 1st as it gets connection from Driver Manager
-public Connection startConnecting () {
-String db = "U03lO7";
-String url = "jdbc:mysql://52.206.157.109/" + db;
-String user = "U03lO7";
-String pass = "53688015239";
-DBSelecter.conn = null;
-try {
-DBSelecter.conn = DriverManager.getConnection(url,user,pass);
-System.out.println("Connected to database : " + db);
-
-}
-catch (SQLException e) {
-System.out.println("SQLException: "+e.getMessage());
-System.out.println("SQLState: "+e.getSQLState());
-System.out.println("VendorError: "+e.getErrorCode());
-
-}
-return DBSelecter.conn;
-}
-
-//Select Users from Database to validate login
+    //Select Users from Database to validate login
 public boolean userDBGet (String userInputName, String userInputPassword) {
     //comment
-        startConnecting();
-        try (Statement stmt = conn.createStatement()) {
+        
+        try (Statement stmt = DBConnector.startConnecting().createStatement()) {
             boolean noMatchingFound = false;
             ResultSet rs = stmt.executeQuery("Select * from user");
             while (rs.next()){
@@ -70,7 +48,7 @@ public boolean userDBGet (String userInputName, String userInputPassword) {
                 }
             
         } catch (SQLException ex) {
-            Logger.getLogger(DBSelecter.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
 }
