@@ -45,9 +45,13 @@ public class ScheduleAssist {
         Scanner scanner = new Scanner (System.in);
         System.out.println("Please enter user login name");
         String userLoginName = scanner.nextLine();
+        //User enters Password
         System.out.println("Please enter user password");
         String userPassword = scanner.next();
-        //Check Database for User Login. This is done by DBSelector returning the information and checking for a match again the userLoginName
+        
+        /*Check Database for User Login. This is done by DBLogin returning the information and checking for a match against the 
+        userLoginName and userPassword. If login is incorrect, restartCheck calls the function again.*/
+        
         boolean restartCheck = dataBaseQueried.userDBGet(userLoginName, userPassword);
             while (!restartCheck) {
             System.out.println("Please enter user login name");
@@ -56,6 +60,17 @@ public class ScheduleAssist {
             userPassword = scanner.next();
             restartCheck = dataBaseQueried.userDBGet(userLoginName, userPassword);
             }
+        
+        /*
+        Using a Switch statement, allow user to select an action to "View" appointments or customers, "Create" appointments or customers,
+         "Delete" appointments or customers, or exit the program. The functions called are Lambda expressions. 
+        */
+        //Insert Code for this
+        
+        // Once Switch is completed, the Switch is called again unless exit the program was selected, in which case a confirm action is asked.
+        //Insert Code for this.
+            
+        
         
         
         
