@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+
 package sa.main.db;
 
 import java.sql.Statement;
@@ -10,7 +12,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.sql.PreparedStatement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,23 +36,46 @@ public class DBInserter {
     */
     
     //Method has not been constructed
-    public void customerInsert (String customerName, int addressID, short active ) {
+    public void customerInsert (String customerName, int addressId, short active ) {
     //comment
-    
-    java.sql.Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
-        String query = "INSERT INTO CUSTOMER "
-                + "(customerName,addressId,active,createDate,createdBy,lastUpdateBy) VALUES"
-                + "("+ customerName +"," + addressID + "," + active + "," + timestamp + ",Kyle" + ",Kyle" +")";
+
+        String insertSQL = "INSERT INTO customer"
+                            + "(customerName,addressId,active,createDate,createdBy,lastUpdateBy)VALUES"
+                            + "(?,?,?,?,?,?)";
         
         
-        try (Statement stmt = DBConnector.startConnecting().createStatement()) {
-            int insertedRecordsCount = stmt.executeUpdate(query);
-            System.out.println("Number of rows updated -" + insertedRecordsCount + "Inserted - "+ customerName +"," + addressID +"," + active + "," + timestamp);
-           
+        
+        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL)) {
+            stmt.setString(1, customerName);
+            stmt.setInt(2, addressId);
+            stmt.setShort(3,active);
+            stmt.setTimestamp(4,getCurrentTimeStamp());
+            stmt.setString(5, "Kyle");
+            stmt.setString(6, "Kyle");
+            
+            int recordsEffected = stmt.executeUpdate();
+            System.out.println ("Number of Rows Effected" + recordsEffected + customerName + addressId + active + getCurrentTimeStamp());
             
         } catch (SQLException ex) {
             Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         
 }
+    //method for inserting appointments into database. Uses Scheduler interface for lambda expressions.
+    public void appointmentInsert () {
+        
+    }
+ 
+        //public interface with one abstract method to use in lambda expression for scheduling appointments.
+    public interface Scheduler {
+        public void Schedule();
+    }
+    
+    private static java.sql.Timestamp getCurrentTimeStamp() {
+
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Timestamp(today.getTime());
+
+	}
+    
 }
