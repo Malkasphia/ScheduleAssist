@@ -3,36 +3,79 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+
 package sa.main.db;
 
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Mal
  */
 public class DBInserter {
-    //Create DBCreator to fill database and check existing database before filling it.
+    //DBInserter allows SQL insertion into customer records of database
     //Statement stmt = conn.createStatement();
+//Class Members
+    private static DBConnector Connector;
 
 
-public void startConnecting () {
-Connection conn = null;
-String db = "U03lO7";
-String url = "jdbc:mysql://52.206.157.109/" + db;
-String user = "U03lO7";
-String pass = "53688015239";
-try {
-conn = DriverManager.getConnection(url,user,pass);
-System.out.println("Connected to database : " + db);} catch (SQLException e) {
-System.out.println("SQLException: "+e.getMessage());
-System.out.println("SQLState: "+e.getSQLState());
-System.out.println("VendorError: "+e.getErrorCode());
+//Class Methods
+    
+    /* 
+    customerInsert allows the user to insert new customers into the customer table. It takes
+    a String for customerName, an int for addressId, and a short for addressID, and active status. It inserts data as 
+    a new row and documents the change in the database by the user who logged in. It uses NOW() for the createDate.
+    */
+    
+    //Method has not been constructed
+    public void customerInsert (String customerName, int addressId, short active ) {
+    //comment
+
+        String insertSQL = "INSERT INTO customer"
+                            + "(customerName,addressId,active,createDate,createdBy,lastUpdateBy)VALUES"
+                            + "(?,?,?,?,?,?)";
+        
+        
+        
+        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL)) {
+            stmt.setString(1, customerName);
+            stmt.setInt(2, addressId);
+            stmt.setShort(3,active);
+            stmt.setTimestamp(4,getCurrentTimeStamp());
+            stmt.setString(5, "Kyle");
+            stmt.setString(6, "Kyle");
+            
+            int recordsEffected = stmt.executeUpdate();
+            System.out.println ("Number of Rows Effected" + recordsEffected + customerName + addressId + active + getCurrentTimeStamp());
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
 }
+    //method for inserting appointments into database. Uses Scheduler interface for lambda expressions.
+    public void appointmentInsert () {
+        
+    }
+ 
+        //public interface with one abstract method to use in lambda expression for scheduling appointments.
+    public interface Scheduler {
+        public void Schedule();
+    }
+    
+    private static java.sql.Timestamp getCurrentTimeStamp() {
 
-}
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Timestamp(today.getTime());
 
+	}
+    
 }

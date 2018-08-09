@@ -23,14 +23,22 @@ public class ScheduleAssist {
     /**
      * @param args the command line arguments
      */
+    static Scanner scanner = new Scanner(System.in);
+    
     public static void main(String[] args) {
         
         //Test DataBase Connection
+        
         DBLogin connect = new DBLogin();
+        DBInserter inserter = new DBInserter();
         //Username Login Process
         System.out.println("Welcome to Schedule Assist V 0.1");
-        
         ScheduleAssist.startLogin(connect);
+        System.out.println("Please enter a number to the corresponding action you wish to complete.");
+        System.out.println("1. Create New Customer Record ");
+        int userChoiceInput = Integer.parseInt(scanner.next());
+        ScheduleAssist.userInterface(userChoiceInput,inserter);
+        
       
 
 
@@ -42,12 +50,16 @@ public class ScheduleAssist {
     
     private static void startLogin (DBLogin dataBaseQueried) {
         //User enters Username
-        Scanner scanner = new Scanner (System.in);
+        
         System.out.println("Please enter user login name");
         String userLoginName = scanner.nextLine();
+        //User enters Password
         System.out.println("Please enter user password");
         String userPassword = scanner.next();
-        //Check Database for User Login. This is done by DBSelector returning the information and checking for a match again the userLoginName
+        
+        /*Check Database for User Login. This is done by DBLogin returning the information and checking for a match against the 
+        userLoginName and userPassword. If login is incorrect, restartCheck calls the function again.*/
+        
         boolean restartCheck = dataBaseQueried.userDBGet(userLoginName, userPassword);
             while (!restartCheck) {
             System.out.println("Please enter user login name");
@@ -56,10 +68,40 @@ public class ScheduleAssist {
             userPassword = scanner.next();
             restartCheck = dataBaseQueried.userDBGet(userLoginName, userPassword);
             }
+            
+            
         
         
+           
+    }
+    
+    /*
+        Using a Switch statement, allow user to select an action to "View" appointments or customers, "Create" appointments or customers,
+         "Delete" appointments or customers, or exit the program. The functions called are Lambda expressions. 
+        */
+        //Insert Code for this
+        
+        // Once Switch is completed, the Switch is called again unless exit the program was selected, in which case a confirm action is asked.
+        //Insert Code for this.
+    private static void userInterface (int userChoice, DBInserter DBInserterObject) {
+        
+       switch (userChoice) {
+           
+           case 1: 
+               System.out.println("Please enter the Customer Name. Limit 45 characters");
+               String inputCustomerName = scanner.next();
+               System.out.println("Please enter the Address ID. Limit 10 numbers.");
+               int inputAddressID = Integer.parseInt(scanner.next());
+               System.out.println("Please enter the active state. Choose 1 for active. 0 for inactive.");
+               short inputActive = Short.parseShort(scanner.next());
+               DBInserterObject.customerInsert(inputCustomerName, inputAddressID, inputActive);
+               break;
+       }
         
     }
+    
+    
+    
     
 
    
