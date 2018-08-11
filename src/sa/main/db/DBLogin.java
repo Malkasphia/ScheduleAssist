@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.application.Platform;
+import sa.main.ScheduleAssist;
 
 
 public class DBLogin {
@@ -24,26 +25,33 @@ public boolean userDBGet (String userInputName, String userInputPassword) {
     //comment
         
         try (Statement stmt = DBConnector.startConnecting().createStatement()) {
-            boolean noMatchingFound = false;
+            boolean noMatchingFound = true;
             ResultSet rs = stmt.executeQuery("Select * from user");
             while (rs.next()){
                 String userName = rs.getString("userName");
-                String userPassword = rs.getString("password");
+                if (!userName.equals(userInputName)) {
+                    continue;
+                }
                 
-                if (userName.equals(userInputName) && userPassword.equals(userInputPassword)) {
+                String userPassword = rs.getString("password");
+                if (!userPassword.equals(userInputPassword)){
+                    continue;
+                }
+                
+                
+                if (userName.equals(userInputName) & userPassword.equals(userInputPassword)) {
                     System.out.println("Welcome" + " " + userInputName);
+                    ScheduleAssist.changeUserLoggedIn(userInputName);
+                    noMatchingFound = false;
                     break;
                 }
-                else {
-                    noMatchingFound = true;
-                    }
+                
 
                             }
                    if (noMatchingFound) {
                     System.out.println("Username and Password did not match. Please re-enter Username and Password.");
-                    
-                    
                     return false;
+                    
                     
                 }
             
