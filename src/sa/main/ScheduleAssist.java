@@ -24,20 +24,21 @@ public class ScheduleAssist {
      * @param args the command line arguments
      */
     static Scanner scanner = new Scanner(System.in);
+    static String userLoggedIn = "Not Logged In";
     
     public static void main(String[] args) {
-        
-        //Test DataBase Connection
-        
+        //Initialize objects for logging into database, insertion, and updating.
         DBLogin connect = new DBLogin();
         DBInserter inserter = new DBInserter();
+        DBUpdater updater = new DBUpdater();
         //Username Login Process
         System.out.println("Welcome to Schedule Assist V 0.1");
         ScheduleAssist.startLogin(connect);
-        System.out.println("Please enter a number to the corresponding action you wish to complete.");
+        System.out.println(userLoggedIn + ", please enter a number to the corresponding action you wish to complete.");
         System.out.println("1. Create New Customer Record ");
+        System.out.println("2. Update a Customer Record ");
         int userChoiceInput = Integer.parseInt(scanner.next());
-        ScheduleAssist.userInterface(userChoiceInput,inserter);
+        ScheduleAssist.userInterface(userChoiceInput,inserter,updater);
         
       
 
@@ -83,7 +84,7 @@ public class ScheduleAssist {
         
         // Once Switch is completed, the Switch is called again unless exit the program was selected, in which case a confirm action is asked.
         //Insert Code for this.
-    private static void userInterface (int userChoice, DBInserter DBInserterObject) {
+    private static void userInterface (int userChoice, DBInserter DBInserterObject, DBUpdater DBUpdaterObject ) {
         
        switch (userChoice) {
            
@@ -96,14 +97,26 @@ public class ScheduleAssist {
                short inputActive = Short.parseShort(scanner.next());
                DBInserterObject.customerInsert(inputCustomerName, inputAddressID, inputActive);
                break;
+           case 2:
+               System.out.println("Please enter the customer ID number of the customer you wish to update");
+               DBUpdaterObject.customerUpdate();
+               break;
        }
         
     }
     
+public static void changeUserLoggedIn (String user) {
+    userLoggedIn = user;
+    
+} 
+
+public static String getUserLoggedIn () {
+    return userLoggedIn;
+    
+} 
     
     
     
 
-   
 
 }

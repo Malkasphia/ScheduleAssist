@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sa.main.ScheduleAssist;
 
 /**
  *
@@ -35,9 +36,7 @@ public class DBInserter {
     a new row and documents the change in the database by the user who logged in. It uses NOW() for the createDate.
     */
     
-    //Method has not been constructed
     public void customerInsert (String customerName, int addressId, short active ) {
-    //comment
 
         String insertSQL = "INSERT INTO customer"
                             + "(customerName,addressId,active,createDate,createdBy,lastUpdateBy)VALUES"
@@ -50,8 +49,8 @@ public class DBInserter {
             stmt.setInt(2, addressId);
             stmt.setShort(3,active);
             stmt.setTimestamp(4,getCurrentTimeStamp());
-            stmt.setString(5, "Kyle");
-            stmt.setString(6, "Kyle");
+            stmt.setString(5, ScheduleAssist.getUserLoggedIn());
+            stmt.setString(6, ScheduleAssist.getUserLoggedIn());
             
             int recordsEffected = stmt.executeUpdate();
             System.out.println ("Number of Rows Effected" + recordsEffected + customerName + addressId + active + getCurrentTimeStamp());
@@ -59,6 +58,8 @@ public class DBInserter {
         } catch (SQLException ex) {
             Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
+    
+        
         
 }
     //method for inserting appointments into database. Uses Scheduler interface for lambda expressions.
