@@ -98,8 +98,8 @@ public class ScheduleAssist {
                DBInserterObject.customerInsert(inputCustomerName, inputAddressID, inputActive);
                break;
            case 2:
-               System.out.println("Please enter the customer ID number of the customer you wish to update");
                DBUpdaterObject.customerUpdate();
+               String inputCustomerID = scanner.next();
                break;
        }
         
@@ -114,6 +114,10 @@ public static String getUserLoggedIn () {
     return userLoggedIn;
     
 } 
+
+public static Scanner getScanner () {
+    return scanner;
+}
     
     
     

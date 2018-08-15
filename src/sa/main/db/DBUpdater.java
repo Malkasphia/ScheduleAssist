@@ -21,15 +21,15 @@ public class DBUpdater {
     //Class Members
     private static DBConnector Connector;
     
-    //Class Methods
-        public void customerUpdate () {
-            //Display all Customers in Database
-            //Ask to enter which Customer to alter by ID number
+            //Display all Customers in Database - Done
+            //Ask to enter which Customer to alter by ID number - Done
             //Ask what change is needed (customerName, addressId, active status)
             //Ask for change details appropriate to the field.
             //Update Customer
-            
-            
+    
+    //Class Methods
+        public void customerUpdate () {
+
         String selectSQL = "SELECT customerId, customerName FROM customer";
 
         try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
@@ -39,14 +39,20 @@ public class DBUpdater {
                 String retrievedCustomerName = rs.getString("customerName");
                 System.out.println("CustomerId - " + retrievedCustomerId + " Customer Name - " + retrievedCustomerName );
                 
+                
             }
-            
-            
-            
+                System.out.println("Please enter the Customer ID of the Customer you wish you update.");
+                String userInputCustomerID = ScheduleAssist.getScanner().next();
+                System.out.println("Please Enter the number of the option you wish to update for Customer " + userInputCustomerID);
+                System.out.println("1. Customer Name");
+                System.out.println("1. Address ID");
+                System.out.println("1. Active Status (0 is not active, 1 is active.)");
+                // Setup Switch statement to alter variables and update customer
         } catch (SQLException ex) {
             Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
 }
+        
+        
         
 }
