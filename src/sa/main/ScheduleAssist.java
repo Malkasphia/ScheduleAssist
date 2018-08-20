@@ -39,12 +39,7 @@ public class ScheduleAssist {
         System.out.println("2. Update a Customer Record ");
         int userChoiceInput = Integer.parseInt(scanner.next());
         ScheduleAssist.userInterface(userChoiceInput,inserter,updater);
-        
-      
-
-
-        
-        
+ 
     }
     
 
@@ -98,7 +93,7 @@ public class ScheduleAssist {
                DBInserterObject.customerInsert(inputCustomerName, inputAddressID, inputActive);
                break;
            case 2:
-               DBUpdaterObject.customerUpdate();
+               DBUpdaterObject.databaseUpdate();
                String inputCustomerID = scanner.next();
                break;
        }

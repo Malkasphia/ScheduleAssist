@@ -53,7 +53,7 @@ public class DBInserter {
             stmt.setString(6, ScheduleAssist.getUserLoggedIn());
             
             int recordsEffected = stmt.executeUpdate();
-            System.out.println ("Number of Rows Effected" + recordsEffected + customerName + addressId + active + getCurrentTimeStamp());
+            System.out.println ("Number of Rows Effected " + recordsEffected + " " + customerName + " " +  addressId +  " " + active + " " +  getCurrentTimeStamp());
             
         } catch (SQLException ex) {
             Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,7 +72,7 @@ public class DBInserter {
         public void Schedule();
     }
     
-    private static java.sql.Timestamp getCurrentTimeStamp() {
+    public static java.sql.Timestamp getCurrentTimeStamp() {
 
 		java.util.Date today = new java.util.Date();
 		return new java.sql.Timestamp(today.getTime());
