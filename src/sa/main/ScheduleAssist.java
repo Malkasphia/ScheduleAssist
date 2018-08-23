@@ -27,18 +27,20 @@ public class ScheduleAssist {
     static String userLoggedIn = "Not Logged In";
     
     public static void main(String[] args) {
-        //Initialize objects for logging into database, insertion, and updating.
+        //Initialize objects for logging into database, insertion, updating, scheduler.
         DBLogin connect = new DBLogin();
         DBInserter inserter = new DBInserter();
         DBUpdater updater = new DBUpdater();
+        DBScheduler scheduler = new DBScheduler();
         //Username Login Process
         System.out.println("Welcome to Schedule Assist V 0.1");
         ScheduleAssist.startLogin(connect);
         System.out.println(userLoggedIn + ", please enter a number to the corresponding action you wish to complete.");
         System.out.println("1. Create New Customer Record ");
         System.out.println("2. Update a Customer Record ");
+        System.out.println("3. Schedule an appointment ");
         int userChoiceInput = Integer.parseInt(scanner.next());
-        ScheduleAssist.userInterface(userChoiceInput,inserter,updater);
+        ScheduleAssist.userInterface(userChoiceInput,inserter,updater,scheduler);
  
     }
     
@@ -77,9 +79,10 @@ public class ScheduleAssist {
         */
         //Insert Code for this
         
-        // Once Switch is completed, the Switch is called again unless exit the program was selected, in which case a confirm action is asked.
+        /* Once Switch is completed, the restart Switch function  is called again unless exit the program was selected, 
+          in which case a confirm action is asked. */
         //Insert Code for this.
-    private static void userInterface (int userChoice, DBInserter DBInserterObject, DBUpdater DBUpdaterObject ) {
+    private static void userInterface (int userChoice, DBInserter DBInserterObject, DBUpdater DBUpdaterObject, DBScheduler DBSchedulerObject ) {
         
        switch (userChoice) {
            
@@ -94,7 +97,9 @@ public class ScheduleAssist {
                break;
            case 2:
                DBUpdaterObject.databaseUpdate();
-               String inputCustomerID = scanner.next();
+               break;
+           case 3:
+               
                break;
        }
         
