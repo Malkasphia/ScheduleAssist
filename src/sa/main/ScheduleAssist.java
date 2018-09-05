@@ -99,7 +99,7 @@ public class ScheduleAssist {
                DBUpdaterObject.databaseUpdate();
                break;
            case 3:
-               
+               DBSchedulerObject.schedule();
                break;
        }
         
