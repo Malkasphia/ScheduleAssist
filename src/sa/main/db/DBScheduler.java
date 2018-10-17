@@ -45,6 +45,10 @@ public class DBScheduler implements Scheduler {
     private static ZonedDateTime start;
     private static ZonedDateTime end;
     private static boolean isEndAppointment;
+    private static boolean doesTitleNeedUpdated = false;
+    private static boolean doesDescriptionIdNeedUpdated = false;
+    private static boolean doesContactNeedUpdated = false;
+    private static boolean doesDateNeedUpdated = false;
     
             
     //Class Methods
@@ -64,8 +68,9 @@ public class DBScheduler implements Scheduler {
         scheduling();
     }
     
-    /* Make maintainScheduling method that uses code structure in DBUpdater customerUpdate method. Make public interface for maintainScheduling
-     so that it can be called as a lambda expression. */
+
+    
+    
     
     private void scheduling () {
         
@@ -165,13 +170,84 @@ public class DBScheduler implements Scheduler {
         }
     }
     
+    
+    
     private static Timestamp toTimestamp(ZonedDateTime dateTime) {
     return new Timestamp(dateTime.toInstant().getEpochSecond() * 1000L);
   }
 
+        /* Make maintainScheduling method that uses code structure in DBUpdater customerUpdate method. Make public interface for maintainScheduling
+     so that it can be called as a lambda expression. */
+    
+    private void updateScheduling () {
+        
+        String selectSQL = "SELECT appointmentId, description FROM appointment";
+
+        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
+            ResultSet rs = stmt.executeQuery(selectSQL);
+            while (rs.next()) {
+                String retrievedappointmentId = rs.getString("appointmentId");
+                String retrievedDescription = rs.getString("description");
+                System.out.println("Appointment ID - " + retrievedappointmentId + " Appointment Description - " + retrievedDescription );
+
+            }
+            System.out.println("Please enter the Appointment ID of the Appointment you wish you update.");
+            DBScheduler.idEntered = Integer.parseInt(ScheduleAssist.getScanner().next());
+            System.out.println("Please Enter the number of the option you wish to update for Appointment " + DBScheduler.idEntered);
+                System.out.println("1. Appointment Title");
+                System.out.println("2. Appointment Description");
+                System.out.println("3. Appointment Contact.");
+                System.out.println("4. Appointment Date.");
+                // Setup Switch statement to alter variables and update customer
+                switch (Integer.parseInt(ScheduleAssist.getScanner().next())) {
+                // Updates doesTitleNeedUpdated to true, updates appointment table with new appointment title ,latest update timestamp, and user who updated it. Changes doesTitleNeedUpdated to false to reset.
+                    case 1:
+                        System.out.println("Please Enter the new title for Appointment " + DBScheduler.idEntered + ", limit is 40 characters");
+                        DBScheduler.titleEntered = ScheduleAssist.getScanner().next();
+                        DBScheduler.doesTitleNeedUpdated = true;
+                        changeAppointmentRecord();
+                        DBScheduler.doesTitleNeedUpdated = false;
+                        break;
+                // Updates doesDescriptionIdNeedUpdated to true, updates appointment table with new appointment title ,latest update timestamp, and user who updated it. Changes doesDescriptionIdNeedUpdated to false to reset.
+                    case 2:
+                        System.out.println("Please Enter the new description for Appointment " + DBScheduler.idEntered + ", limit is 40 characters");
+                        DBScheduler.descriptionEntered = ScheduleAssist.getScanner().next();
+                        DBScheduler.doesDescriptionIdNeedUpdated = true;
+                        changeAppointmentRecord();
+                        DBScheduler.doesDescriptionIdNeedUpdated = false;
+                        break;
+                // Updates doesContactNeedUpdated to true, updates appointment table with new appointment contact ,latest update timestamp, and user who updated it. Changes doesContactNeedUpdated to false to reset.
+                    case 3:
+                        System.out.println("Please Enter the new contact information for Appointment " + DBScheduler.idEntered + ", limit is 40 characters");
+                        DBScheduler.contactEntered = ScheduleAssist.getScanner().next();
+                        DBScheduler.doesContactNeedUpdated = true;
+                        changeAppointmentRecord();
+                        DBScheduler.doesContactNeedUpdated = false;
+                        break;
+                // Updates doesContactNeedUpdated to true, updates appointment table with new appointment date ,latest update timestamp, and user who updated it. Changes doesContactNeedUpdated to false to reset.
+                    case 4:
+                        DBScheduler.doesDateNeedUpdated = true;
+                        changeAppointmentRecord();
+                        DBScheduler.doesDateNeedUpdated = false;
+                        break;    
+                        
+                    
+                    
+                }
         
         
+    } catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+      
+   public void databaseUpdate () {
+            updateScheduling ();
+        }
         
+   private void changeAppointmentRecord () {
+       
+   }
         
         
         
