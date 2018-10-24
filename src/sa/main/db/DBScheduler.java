@@ -90,13 +90,13 @@ public class DBScheduler implements Scheduler {
             String insertSQL = "INSERT INTO appointment"
                             + "(customerId,title,description,location,contact,url,start,end,createDate,createdBy,lastUpdate,lastUpdateBy)VALUES"
                             + "(?,?,?,?,?,?,?,?,?,?,?,?)";
-            System.out.println("Please enter the title of the appointment for Customer " + DBScheduler.idEntered );
+            System.out.println("Please enter the title of the appointment for Customer, use _ or - for spaces. "  );
             DBScheduler.titleEntered = ScheduleAssist.getScanner().next();
-            System.out.println("Please enter the description of the appointment for Customer " + DBScheduler.idEntered );
+            System.out.println("Please enter the description of the appointment for Customer, use _ or - for spaces. "  );
             DBScheduler.descriptionEntered = ScheduleAssist.getScanner().next();
-            System.out.println("Please enter the location of the appointment for Customer " + DBScheduler.idEntered );
+            System.out.println("Please enter the location of the appointment for Customer, use _ or - for spaces. "  );
             DBScheduler.locationEntered = ScheduleAssist.getScanner().next();
-            System.out.println("Please enter the contact phone number for Customer " + DBScheduler.idEntered );
+            System.out.println("Please enter the contact phone number for Customer , use _ or - for spaces."  );
             DBScheduler.contactEntered = ScheduleAssist.getScanner().next();
             DBScheduler.start = getAppointmentDate();
             DBScheduler.isEndAppointment = true;
@@ -139,11 +139,11 @@ public class DBScheduler implements Scheduler {
     private  ZonedDateTime getAppointmentDate() {
         if (DBScheduler.isEndAppointment)
         {
-        System.out.println("Please enter the ending month of the appointment" );
+        System.out.println("Please enter the ending month of the appointment, 1 through 12" );
         DBScheduler.month = Integer.parseInt(ScheduleAssist.getScanner().next());
         System.out.println("Please enter the ending number of the day of the month for the appointment (example: 1 through 31 " );
         DBScheduler.dayOfMonth = Integer.parseInt(ScheduleAssist.getScanner().next());
-        System.out.println("Please enter the ending number of the hour of the appointment (business hours are 8am to 5pm only) " );
+        System.out.println("Please enter the ending number of the hour of the appointment (business hours are 8am to 5pm only), use military time, for example - 1pm is 13, 5pm is 17 " );
         DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
         System.out.println("Please enter the ending number of the minute of the appointment (example: 15, 30 or 45) " );
         DBScheduler.minute = Integer.parseInt(ScheduleAssist.getScanner().next());
@@ -154,11 +154,11 @@ public class DBScheduler implements Scheduler {
                 nanoOfSecond, timezone);
         }
         else {
-            System.out.println("Please enter the starting month of the appointment" );
+            System.out.println("Please enter the starting month of the appointment, 1 through 12" );
         DBScheduler.month = Integer.parseInt(ScheduleAssist.getScanner().next());
         System.out.println("Please enter the starting number of the day of the month for the appointment (example: 1 through 31 " );
         DBScheduler.dayOfMonth = Integer.parseInt(ScheduleAssist.getScanner().next());
-        System.out.println("Please enter the starting number of the hour of the appointment (business hours are 8am to 5pm only) " );
+        System.out.println("Please enter the starting number of the hour of the appointment (business hours are 8am to 5pm only), use military time, for example - 1pm is 13, 5pm is 17  " );
         DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
         System.out.println("Please enter the starting number of the minute of the appointment (example: 15, 30 or 45) " );
         DBScheduler.minute = Integer.parseInt(ScheduleAssist.getScanner().next());
@@ -181,14 +181,14 @@ public class DBScheduler implements Scheduler {
     
     private void updateScheduling () {
         
-        String selectSQL = "SELECT appointmentId, description FROM appointment";
+        String selectSQL = "SELECT appointmentId, title FROM appointment";
 
         try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
             ResultSet rs = stmt.executeQuery(selectSQL);
             while (rs.next()) {
                 String retrievedappointmentId = rs.getString("appointmentId");
-                String retrievedDescription = rs.getString("description");
-                System.out.println("Appointment ID - " + retrievedappointmentId + " Appointment Description - " + retrievedDescription );
+                String retrievedTitle = rs.getString("title");
+                System.out.println("Appointment ID - " + retrievedappointmentId + " Appointment Title - " + retrievedTitle );
 
             }
             System.out.println("Please enter the Appointment ID of the Appointment you wish you update.");
@@ -202,7 +202,7 @@ public class DBScheduler implements Scheduler {
                 switch (Integer.parseInt(ScheduleAssist.getScanner().next())) {
                 // Updates doesTitleNeedUpdated to true, updates appointment table with new appointment title ,latest update timestamp, and user who updated it. Changes doesTitleNeedUpdated to false to reset.
                     case 1:
-                        System.out.println("Please Enter the new title for Appointment " + DBScheduler.idEntered + ", limit is 40 characters");
+                        System.out.println("Please Enter the new title for Appointment " + DBScheduler.idEntered + ", limit is 40 characters, use _ or - for spaces.");
                         DBScheduler.titleEntered = ScheduleAssist.getScanner().next();
                         DBScheduler.doesTitleNeedUpdated = true;
                         changeAppointmentRecord();
@@ -210,7 +210,7 @@ public class DBScheduler implements Scheduler {
                         break;
                 // Updates doesDescriptionIdNeedUpdated to true, updates appointment table with new appointment title ,latest update timestamp, and user who updated it. Changes doesDescriptionIdNeedUpdated to false to reset.
                     case 2:
-                        System.out.println("Please Enter the new description for Appointment " + DBScheduler.idEntered + ", limit is 40 characters");
+                        System.out.println("Please Enter the new description for Appointment " + DBScheduler.idEntered + ", limit is 40 characters, use _ or - for spaces.");
                         DBScheduler.descriptionEntered = ScheduleAssist.getScanner().next();
                         DBScheduler.doesDescriptionIdNeedUpdated = true;
                         changeAppointmentRecord();
@@ -218,7 +218,7 @@ public class DBScheduler implements Scheduler {
                         break;
                 // Updates doesContactNeedUpdated to true, updates appointment table with new appointment contact ,latest update timestamp, and user who updated it. Changes doesContactNeedUpdated to false to reset.
                     case 3:
-                        System.out.println("Please Enter the new contact information for Appointment " + DBScheduler.idEntered + ", limit is 40 characters");
+                        System.out.println("Please Enter the new contact information for Appointment " + DBScheduler.idEntered + ", limit is 40 characters,, use _ or - for spaces.");
                         DBScheduler.contactEntered = ScheduleAssist.getScanner().next();
                         DBScheduler.doesContactNeedUpdated = true;
                         changeAppointmentRecord();
@@ -245,7 +245,76 @@ public class DBScheduler implements Scheduler {
             updateScheduling ();
         }
         
+   
+   // Uses doesTitleNeedUpdated, doesDescriptionIdNeedUpdated, doesContactNeedUpdated,  and doesDateNeedUpdated booleans to determine which SQL query to run and update to perform.
    private void changeAppointmentRecord () {
+        if (DBScheduler.doesTitleNeedUpdated) {
+            String updateSQLString = "UPDATE appointment SET title = ? , lastUpdate = ? , lastUpdateBy = ?  WHERE appointmentId = ? ";
+            try (PreparedStatement stmtUpdate = DBConnector.startConnecting().prepareStatement(updateSQLString)) {
+            stmtUpdate.setString(1, DBScheduler.titleEntered);
+            stmtUpdate.setTimestamp(2, DBInserter.getCurrentTimeStamp());
+            stmtUpdate.setString(3, ScheduleAssist.getUserLoggedIn());
+            stmtUpdate.setInt(4, DBScheduler.idEntered);
+            
+            int recordsEffected = stmtUpdate.executeUpdate();
+            System.out.println ("Number of Rows Effected" +" " + recordsEffected +" Appointment " + DBScheduler.idEntered + " " + DBScheduler.titleEntered +" " + DBInserter.getCurrentTimeStamp());
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+        if (DBScheduler.doesDescriptionIdNeedUpdated) {
+            String updateSQLString = "UPDATE appointment SET description = ? , lastUpdate = ? , lastUpdateBy = ?  WHERE appointmentId = ? ";
+            try (PreparedStatement stmtUpdate = DBConnector.startConnecting().prepareStatement(updateSQLString)) {
+            stmtUpdate.setString(1, DBScheduler.descriptionEntered);
+            stmtUpdate.setTimestamp(2, DBInserter.getCurrentTimeStamp());
+            stmtUpdate.setString(3, ScheduleAssist.getUserLoggedIn());
+            stmtUpdate.setInt(4, DBScheduler.idEntered);
+            
+            int recordsEffected = stmtUpdate.executeUpdate();
+            System.out.println ("Number of Rows Effected" +" " + recordsEffected +" Appointment " + DBScheduler.idEntered + " " + DBScheduler.descriptionEntered +" " + DBInserter.getCurrentTimeStamp());
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+        if (DBScheduler.doesContactNeedUpdated) {
+            String updateSQLString = "UPDATE appointment SET contact = ? , lastUpdate = ? , lastUpdateBy = ?  WHERE appointmentId = ? ";
+            try (PreparedStatement stmtUpdate = DBConnector.startConnecting().prepareStatement(updateSQLString)) {
+            stmtUpdate.setString(1, DBScheduler.contactEntered);
+            stmtUpdate.setTimestamp(2, DBInserter.getCurrentTimeStamp());
+            stmtUpdate.setString(3, ScheduleAssist.getUserLoggedIn());
+            stmtUpdate.setInt(4, DBScheduler.idEntered);
+            
+            int recordsEffected = stmtUpdate.executeUpdate();
+            System.out.println ("Number of Rows Effected" +" " + recordsEffected +" Appointment " + DBScheduler.idEntered + " " + DBScheduler.contactEntered +" " + DBInserter.getCurrentTimeStamp());
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+        if (DBScheduler.doesDateNeedUpdated) {
+            DBScheduler.start = getAppointmentDate();
+            DBScheduler.isEndAppointment = true;
+            DBScheduler.end = getAppointmentDate();
+            DBScheduler.isEndAppointment = false;
+            String updateSQLString = "UPDATE appointment SET start = ? , end = ?, lastUpdate = ? , lastUpdateBy = ?  WHERE appointmentId = ? ";
+            try (PreparedStatement stmtUpdate = DBConnector.startConnecting().prepareStatement(updateSQLString)) {
+            stmtUpdate.setTimestamp(1,toTimestamp(DBScheduler.start));
+            stmtUpdate.setTimestamp(2,toTimestamp(DBScheduler.end));
+            stmtUpdate.setTimestamp(3, DBInserter.getCurrentTimeStamp());
+            stmtUpdate.setString(4, ScheduleAssist.getUserLoggedIn());
+            stmtUpdate.setInt(5, DBScheduler.idEntered);
+            
+            int recordsEffected = stmtUpdate.executeUpdate();
+            System.out.println ("Number of Rows Effected" + " " + recordsEffected +" Appointment " + DBScheduler.idEntered + " Start Date " + toTimestamp(DBScheduler.start) + " End Date " + toTimestamp(DBScheduler.end) + " Updated " + DBInserter.getCurrentTimeStamp());
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+       
+       
        
    }
         
