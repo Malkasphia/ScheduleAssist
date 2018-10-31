@@ -17,7 +17,7 @@ import sa.main.ScheduleAssist;
  * @author Mal
  */
 public class DBUpdater {
-    // DBUpdater allows the updating of database records.
+    // DBUpdater allows the updating of customer records.
     //Class Members
     private static DBConnector Connector;
     private static int idToBeUpdated;
@@ -29,11 +29,7 @@ public class DBUpdater {
     private static boolean doesStatusNeedUpdated = false;
     
     
-            //Display all Customers in Database - Done
-            //Ask to enter which Customer to alter by ID number - Done
-            //Ask what change is needed (customerName, addressId, active status)
-            //Ask for change details appropriate to the field.
-            //Update Customer
+
     
     //Class Methods
         private void customerUpdate () {

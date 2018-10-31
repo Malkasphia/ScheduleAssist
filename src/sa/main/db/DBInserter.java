@@ -67,10 +67,7 @@ public class DBInserter {
         
     }
  
-        //public interface with one abstract method to use in lambda expression for scheduling appointments.
-    public interface Scheduler {
-        public void Schedule();
-    }
+
     
     public static java.sql.Timestamp getCurrentTimeStamp() {
 
