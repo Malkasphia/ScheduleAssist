@@ -100,10 +100,10 @@ public class ScheduleAssist {
                DBUpdaterObject.databaseUpdate();
                break;
            case 3:
-               DBSchedulerObject.schedule();
+               DBSchedulerObject.entrySchedule();
                break;
            case 4:
-               DBSchedulerObject.databaseUpdate();
+               DBSchedulerObject.entryUpdate();
        }
         
     }

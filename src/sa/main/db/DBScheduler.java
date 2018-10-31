@@ -24,10 +24,17 @@ import static sa.main.db.DBInserter.getCurrentTimeStamp;
     public void schedule ();
 }
 
+    @FunctionalInterface
+    interface UpdateScheduler {
+    public void updateSchedule ();
+}
+
 
 // DBScheduler allows the creation and updating of Appointments in the SQL database. It does this through lambda expressions.
-public class DBScheduler implements Scheduler {
+public class DBScheduler {
     //Class Members
+    private static Scheduler schedulerObj;
+    private static UpdateScheduler updateSchedulerObj;
     private static DBConnector Connector;
     private static DBScheduler PrimeScheduler;
     private static int idEntered;
@@ -63,9 +70,14 @@ public class DBScheduler implements Scheduler {
     start datetime, end datetime. Inserts createDate datetime, createBy, lastUpdate timestamp, lastupdateBy automatically.
     */
     // Confirm appointment creation and print out values for appointment
-    @Override
-    public void schedule (){
-        scheduling();
+
+    
+    // Lambda operation for using entry of appointment into database.
+    public void entrySchedule () {
+     schedulerObj = () -> {
+         scheduling();
+     };
+     schedulerObj.schedule();
     }
     
 
@@ -178,6 +190,16 @@ public class DBScheduler implements Scheduler {
 
         /* Make maintainScheduling method that uses code structure in DBUpdater customerUpdate method. Make public interface for maintainScheduling
      so that it can be called as a lambda expression. */
+
+    
+    //Lambda operation for updating appointments.
+    public void entryUpdate() {
+     updateSchedulerObj = () -> {
+         updateScheduling();
+     };
+     updateSchedulerObj.updateSchedule();
+    }
+    
     
     private void updateScheduling () {
         
