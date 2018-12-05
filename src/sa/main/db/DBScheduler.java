@@ -51,6 +51,7 @@ public class DBScheduler {
     private static ZoneId timezone;
     private static ZonedDateTime start;
     private static ZonedDateTime end;
+    private static ZonedDateTime today;
     private static boolean isEndAppointment;
     private static boolean doesTitleNeedUpdated = false;
     private static boolean doesDescriptionIdNeedUpdated = false;
@@ -188,7 +189,7 @@ public class DBScheduler {
     return new Timestamp(dateTime.toInstant().getEpochSecond() * 1000L);
   }
 
-        /* Make maintainScheduling method that uses code structure in DBUpdater customerUpdate method. Make public interface for maintainScheduling
+        /* Make maintainScheduling method that uses code structure in DBUpdater customerUpdate method. Make public interface 
      so that it can be called as a lambda expression. */
 
     
@@ -339,7 +340,33 @@ public class DBScheduler {
        
        
    }
-        
+   
+   // Provide the ability to view the calendar by month and by week.
+   
+   // Provides the view of week, sunday through saturday for all appointments by all consultants.
+   public void viewWeek () {
+   // Get current day
+   today = ZonedDateTime.now();
+   // Get previous three days
+   ZonedDateTime firstPreviousDay = today.minusDays(1);
+   ZonedDateTime secondPreviousDay = today.minusDays(2);
+   ZonedDateTime thirdPreviousDay = today.minusDays(3);
+   // Get future three days
+   ZonedDateTime firstFutureDay = today.plusDays(1);
+   ZonedDateTime secondFutureDay = today.plusDays(2);
+   ZonedDateTime thirdFutureDay = today.plusDays(3);
+   // Query Database for matching days
+   
+   // Print all appointments for those days.
+   }
+      
+   
+  // Provides the view of week, 1st-30th or 31st, for all appointments by all consultants.
+   public void viewMonth () {
+   // Check month for 30 days or 31 days.   
+   // Query database for 1st of month through 31st.
+   // Display all appointments for month.
+   }
         
         
         
