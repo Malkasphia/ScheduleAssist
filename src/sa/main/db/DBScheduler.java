@@ -8,8 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sa.main.ScheduleAssist;
@@ -43,7 +46,7 @@ public class DBScheduler {
     private static String locationEntered;
     private static String contactEntered;
     private static String url = "www.defaultappointment.net";
-    private static int year = 2018;
+    private static int year = 2019;
     private static int month;
     private static int dayOfMonth;
     private static int hour;
@@ -184,7 +187,7 @@ public class DBScheduler {
     }
     
     
-    
+    // Used to convert ZoneDateTime to Timestamp
     private static Timestamp toTimestamp(ZonedDateTime dateTime) {
     return new Timestamp(dateTime.toInstant().getEpochSecond() * 1000L);
   }
@@ -201,7 +204,7 @@ public class DBScheduler {
      updateSchedulerObj.updateSchedule();
     }
     
-    
+    //private function for updating internal fields and appointments
     private void updateScheduling () {
         
         String selectSQL = "SELECT appointmentId, title FROM appointment";
@@ -342,11 +345,14 @@ public class DBScheduler {
    }
    
    // Provide the ability to view the calendar by month and by week.
-   
-   // Provides the view of week, sunday through saturday for all appointments by all consultants.
    public void viewWeek () {
+       provideViewWeek();
+   }
+   
+   // Provides the view of current day and three previous days as well as three days into the future.
+   private void provideViewWeek () {
    // Get current day
-   today = ZonedDateTime.now();
+  /* today = ZonedDateTime.now();
    // Get previous three days
    ZonedDateTime firstPreviousDay = today.minusDays(1);
    ZonedDateTime secondPreviousDay = today.minusDays(2);
@@ -355,17 +361,94 @@ public class DBScheduler {
    ZonedDateTime firstFutureDay = today.plusDays(1);
    ZonedDateTime secondFutureDay = today.plusDays(2);
    ZonedDateTime thirdFutureDay = today.plusDays(3);
-   // Query Database for matching days
+   */
+   // Using LocalDate instead of ZonedDateTime
    
-   // Print all appointments for those days.
+   LocalDate todayToday = LocalDate.now();
+   // Get previous three days
+   LocalDate firstPreviousDay = todayToday.minusDays(1);
+   LocalDate secondPreviousDay = todayToday.minusDays(2);
+   LocalDate thirdPreviousDay = todayToday.minusDays(3);
+   // Get future three days
+   LocalDate firstFutureDay = todayToday.plusDays(1);
+   LocalDate secondFutureDay = todayToday.plusDays(2);
+   LocalDate thirdFutureDay = todayToday.plusDays(3);
+   
+   
+   
+   // Query Database for matching days algorithm
+    // 1. Truncate ZoneDateTime Variables to Day Temporal Unit
+   /* today = today.truncatedTo(ChronoUnit.DAYS);
+   firstPreviousDay = firstPreviousDay.truncatedTo(ChronoUnit.DAYS);
+   secondPreviousDay = secondPreviousDay.truncatedTo(ChronoUnit.DAYS);
+   thirdPreviousDay = thirdPreviousDay.truncatedTo(ChronoUnit.DAYS);
+   firstFutureDay = firstFutureDay.truncatedTo(ChronoUnit.DAYS);
+   secondFutureDay = secondFutureDay.truncatedTo(ChronoUnit.DAYS);
+   thirdFutureDay = thirdFutureDay.truncatedTo(ChronoUnit.DAYS); */
+    // 2. Query Database to select all where appointment.start datetime (truncated to Days) is equal to all ZoneDateTime seven variables ( handled by printDayAppointments
+    // and Print Week of Appointments
+    System.out.println("Showing Appointments for the Week");
+    printDayAppointments(thirdPreviousDay);
+    printDayAppointments(secondPreviousDay);
+    printDayAppointments(firstPreviousDay);
+    printDayAppointments(todayToday);
+    printDayAppointments(firstFutureDay);
+    printDayAppointments(secondFutureDay);
+    printDayAppointments(thirdFutureDay);
+    System.out.println("End of Week of Appointments");
+   
    }
       
    
   // Provides the view of week, 1st-30th or 31st, for all appointments by all consultants.
+   private void printDayAppointments (LocalDate currentDay ) {
+       System.out.println(currentDay);
+        String selectSQL = "SELECT appointmentId, title, start FROM appointment WHERE start LIKE '%"+currentDay + "%'" ;
+        
+        try (PreparedStatement stmtSelect = DBConnector.startConnecting().prepareStatement(selectSQL)) {        
+            ResultSet rs = stmtSelect.executeQuery(selectSQL);
+            while (rs.next()) {
+                String retrievedappointmentId = rs.getString("appointmentId");
+                String retrievedTitle = rs.getString("title");
+                Timestamp retrievedStartDate = rs.getTimestamp("start");
+                System.out.println("Appointment ID - " + retrievedappointmentId + " Appointment Title - " + retrievedTitle + "Start Date - " + retrievedStartDate );
+
+            }
+            
+            
+            if(!rs.first()) 
+                System.out.println(" No appointments found"); 
+            
+                
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
+   
+   
+   
    public void viewMonth () {
-   // Check month for 30 days or 31 days.   
-   // Query database for 1st of month through 31st.
+   // call provideViewMonth, is a public API for provideViewMonth
+   provideViewMonth();
+   }
+   
+   private void provideViewMonth () {
+
+// Iterate through 31 days using same code as viewWeek 
+    //Setup Variable to call printDayAppointments   
+   LocalDate todayToday = LocalDate.now();
+   // Use LocalDate method withDayOfMonth to change date to the first day through the last day of the month, each time printing using printDayAppointments
+        //using for loop to iterate through the possible 31 days of a month
+        try {
+            for (int intOfMonth = 1; intOfMonth <= 32; intOfMonth++)
+                printDayAppointments(todayToday.withDayOfMonth(intOfMonth));
+        }
+        catch (DateTimeException ex) {
+            System.out.println(" No Appointments after the last date. ");
+   // Query database for 1st of month through 31st
    // Display all appointments for month.
+        }
    }
         
         

@@ -105,6 +105,8 @@ public class ScheduleAssist {
                break;
            case 4:
                DBSchedulerObject.entryUpdate();
+           case 5:
+               DBSchedulerObject.viewMonth();
        }
         
     }
