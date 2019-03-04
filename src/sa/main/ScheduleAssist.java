@@ -40,6 +40,7 @@ public class ScheduleAssist {
         System.out.println("2. Update a Customer Record ");
         System.out.println("3. Schedule an appointment ");
         System.out.println("4. Update an appointment ");
+        System.out.println("5. View Schedule ");
         int userChoiceInput = Integer.parseInt(scanner.next());
         ScheduleAssist.userInterface(userChoiceInput,inserter,updater,scheduler);
  
@@ -104,6 +105,8 @@ public class ScheduleAssist {
                break;
            case 4:
                DBSchedulerObject.entryUpdate();
+           case 5:
+               DBSchedulerObject.viewMonth();
        }
         
     }
