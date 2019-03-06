@@ -88,7 +88,7 @@ public class DBScheduler {
     
     
     
-    private void scheduling () {
+    private void scheduling ()  {
         
     
         String selectSQL = "SELECT customerId, customerName FROM customer";
@@ -114,9 +114,25 @@ public class DBScheduler {
             DBScheduler.locationEntered = ScheduleAssist.getScanner().next();
             System.out.println("Please enter the contact phone number for Customer , use _ or - for spaces."  );
             DBScheduler.contactEntered = ScheduleAssist.getScanner().next();
-            DBScheduler.start = getAppointmentDate();
+            
+            try {
+                DBScheduler.start = getAppointmentDate();
+            } catch (Exception ex) {
+                System.out.println(ex);
+                entrySchedule ();        
+                    
+            }
+            
             DBScheduler.isEndAppointment = true;
-            DBScheduler.end = getAppointmentDate();
+            
+            try {
+                DBScheduler.end = getAppointmentDate();
+            } catch (Exception ex) {
+                System.out.println(ex);
+                DBScheduler.isEndAppointment = false;
+                entrySchedule ();
+            }
+            
             DBScheduler.isEndAppointment = false;
             
             
@@ -152,7 +168,7 @@ public class DBScheduler {
         }
     }
     
-    private  ZonedDateTime getAppointmentDate() {
+    private  ZonedDateTime getAppointmentDate() throws Exception {
         if (DBScheduler.isEndAppointment)
         {
         System.out.println("Please enter the ending month of the appointment, 1 through 12" );
@@ -161,6 +177,21 @@ public class DBScheduler {
         DBScheduler.dayOfMonth = Integer.parseInt(ScheduleAssist.getScanner().next());
         System.out.println("Please enter the ending number of the hour of the appointment (business hours are 8am to 5pm only), use military time, for example - 1pm is 13, 5pm is 17 " );
         DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
+             
+                if (DBScheduler.hour > 17 ) 
+                {
+                
+                throw new Exception("Appointment cannot start later than 17:00 ( 5pm Military Time). Please Re-Enter Appointment");
+                }
+            
+            
+            
+                if (DBScheduler.hour < 8 ) 
+                {
+                
+                throw new Exception("Appointment cannot start earlier than 8:00 ( 8am Military Time). Please Re-Enter Appointment");
+                }
+            
         System.out.println("Please enter the ending number of the minute of the appointment (example: 15, 30 or 45) " );
         DBScheduler.minute = Integer.parseInt(ScheduleAssist.getScanner().next());
         int second = 0;
@@ -170,12 +201,24 @@ public class DBScheduler {
                 nanoOfSecond, timezone);
         }
         else {
-            System.out.println("Please enter the starting month of the appointment, 1 through 12" );
+        System.out.println("Please enter the starting month of the appointment, 1 through 12" );
         DBScheduler.month = Integer.parseInt(ScheduleAssist.getScanner().next());
         System.out.println("Please enter the starting number of the day of the month for the appointment (example: 1 through 31 " );
         DBScheduler.dayOfMonth = Integer.parseInt(ScheduleAssist.getScanner().next());
         System.out.println("Please enter the starting number of the hour of the appointment (business hours are 8am to 5pm only), use military time, for example - 1pm is 13, 5pm is 17  " );
         DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
+               if (DBScheduler.hour > 17 ) 
+                {
+                
+                throw new Exception("Appointment cannot start later than 17:00 ( 5pm Military Time). Please Re-Enter Appointment");
+                }
+            
+                if (DBScheduler.hour < 8 ) 
+                {
+                
+                throw new Exception("Appointment cannot start earlier than 8:00 ( 8am Military Time). Please Re-Enter Appointment");
+                }
+            
         System.out.println("Please enter the starting number of the minute of the appointment (example: 15, 30 or 45) " );
         DBScheduler.minute = Integer.parseInt(ScheduleAssist.getScanner().next());
         int second = 0;
@@ -320,10 +363,26 @@ public class DBScheduler {
         }
         }
         if (DBScheduler.doesDateNeedUpdated) {
-            DBScheduler.start = getAppointmentDate();
+            
+            try {
+                DBScheduler.start = getAppointmentDate();
+            } catch (Exception ex) {
+                System.out.println(ex);
+                entrySchedule ();
+            }
+            
             DBScheduler.isEndAppointment = true;
-            DBScheduler.end = getAppointmentDate();
+            
+            try {
+                DBScheduler.end = getAppointmentDate();
+            } catch (Exception ex) {
+                System.out.println(ex);
+                DBScheduler.isEndAppointment = false;
+                entrySchedule ();
+            }
+            
             DBScheduler.isEndAppointment = false;
+
             String updateSQLString = "UPDATE appointment SET start = ? , end = ?, lastUpdate = ? , lastUpdateBy = ?  WHERE appointmentId = ? ";
             try (PreparedStatement stmtUpdate = DBConnector.startConnecting().prepareStatement(updateSQLString)) {
             stmtUpdate.setTimestamp(1,toTimestamp(DBScheduler.start));
@@ -434,7 +493,7 @@ public class DBScheduler {
    }
    
    private void provideViewMonth () {
-
+System.out.println("Showing Appointments for the Month");
 // Iterate through 31 days using same code as viewWeek 
     //Setup Variable to call printDayAppointments   
    LocalDate todayToday = LocalDate.now();
@@ -446,8 +505,7 @@ public class DBScheduler {
         }
         catch (DateTimeException ex) {
             System.out.println(" No Appointments after the last date. ");
-   // Query database for 1st of month through 31st
-   // Display all appointments for month.
+   
         }
    }
         
