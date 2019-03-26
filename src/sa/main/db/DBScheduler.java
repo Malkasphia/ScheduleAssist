@@ -115,23 +115,15 @@ public class DBScheduler {
             System.out.println("Please enter the contact phone number for Customer , use _ or - for spaces."  );
             DBScheduler.contactEntered = ScheduleAssist.getScanner().next();
             
-            try {
-                DBScheduler.start = getAppointmentDate();
-            } catch (Exception ex) {
-                System.out.println(ex);
-                entrySchedule ();        
-                    
-            }
+
+            DBScheduler.start = getAppointmentDate();
+
             
             DBScheduler.isEndAppointment = true;
             
-            try {
-                DBScheduler.end = getAppointmentDate();
-            } catch (Exception ex) {
-                System.out.println(ex);
-                DBScheduler.isEndAppointment = false;
-                entrySchedule ();
-            }
+
+            DBScheduler.end = getAppointmentDate();
+
             
             DBScheduler.isEndAppointment = false;
             
@@ -168,7 +160,7 @@ public class DBScheduler {
         }
     }
     
-    private  ZonedDateTime getAppointmentDate() throws Exception {
+    private  ZonedDateTime getAppointmentDate() {
         if (DBScheduler.isEndAppointment)
         {
         System.out.println("Please enter the ending month of the appointment, 1 through 12" );
@@ -177,19 +169,28 @@ public class DBScheduler {
         DBScheduler.dayOfMonth = Integer.parseInt(ScheduleAssist.getScanner().next());
         System.out.println("Please enter the ending number of the hour of the appointment (business hours are 8am to 5pm only), use military time, for example - 1pm is 13, 5pm is 17 " );
         DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
-             
-                if (DBScheduler.hour > 17 ) 
+                while (DBScheduler.hour > 17 ) 
                 {
+            try {
+                throw new Exception("Appointment cannot start later than 17:00 ( 5pm Military Time). Please Re-Enter ending number of the hour of the appointment. ");
+            } catch (Exception ex) {
+                System.out.println(ex);
+                DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
                 
-                throw new Exception("Appointment cannot start later than 17:00 ( 5pm Military Time). Please Re-Enter Appointment");
+            }
                 }
             
             
             
-                if (DBScheduler.hour < 8 ) 
+                while (DBScheduler.hour < 8 ) 
                 {
                 
-                throw new Exception("Appointment cannot start earlier than 8:00 ( 8am Military Time). Please Re-Enter Appointment");
+            try {
+                throw new Exception("Appointment cannot start earlier than 8:00 ( 8am Military Time). Please Re-Enter ending number of the hour of the appointment");
+            } catch (Exception ex) {
+                System.out.println(ex);
+                DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
+            }
                 }
             
         System.out.println("Please enter the ending number of the minute of the appointment (example: 15, 30 or 45) " );
@@ -197,9 +198,48 @@ public class DBScheduler {
         int second = 0;
         int nanoOfSecond = 0;
         DBScheduler.timezone = timezone.systemDefault();
-        return ZonedDateTime.of(DBScheduler.year,DBScheduler.month,DBScheduler.dayOfMonth,DBScheduler.hour,DBScheduler.minute,second,
+                    DBScheduler.timezone = timezone.systemDefault();
+        ZonedDateTime returnZoneDateTime = ZonedDateTime.of(DBScheduler.year,DBScheduler.month,DBScheduler.dayOfMonth,DBScheduler.hour,DBScheduler.minute,second,
                 nanoOfSecond, timezone);
+        Timestamp comparedDay = toTimestamp(returnZoneDateTime);
+                        // Check for overlapping appointments and throw an exception if there is one.
+                        // Get all appointments of the day
+                        // compare DBscheduler.hour with appointment considering the hour
+                        // throw exception if they overlap
+                            System.out.println ("Checking for overlapping appointments");
+                            LocalDate currentDay = LocalDate.now(); 
+                            String selectSQL = "SELECT start, end FROM appointment WHERE start LIKE '%"+currentDay + "%' ";
+                            try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
+                                ResultSet rs = stmt.executeQuery(selectSQL);
+                                while (rs.next()) {
+                                Timestamp retrievedappointmentStart = rs.getTimestamp("start");
+                                Timestamp retrievedappointmentEnd = rs.getTimestamp("end");
+                                if (comparedDay.after(retrievedappointmentEnd) || comparedDay.before(retrievedappointmentStart) ) 
+                                {
+                                    
+                                }
+                                else 
+                                {
+                                    try {
+                                      throw new Exception("Appointment overlaps with another appointment between the times" + " " + retrievedappointmentStart + " and " + retrievedappointmentEnd );
+                                    } catch (Exception ex) {
+                                        System.out.println(ex);
+                                        DBScheduler.isEndAppointment = false;
+                                        getAppointmentDate();
+                                        
+                                    }
+                                }
+
+                                }
+                                System.out.println ("No overlapping appointments found");
+                            
+                            }
+                            catch (SQLException ex) {
+                                    Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+         return returnZoneDateTime;
         }
+        
         else {
         System.out.println("Please enter the starting month of the appointment, 1 through 12" );
         DBScheduler.month = Integer.parseInt(ScheduleAssist.getScanner().next());
@@ -207,26 +247,77 @@ public class DBScheduler {
         DBScheduler.dayOfMonth = Integer.parseInt(ScheduleAssist.getScanner().next());
         System.out.println("Please enter the starting number of the hour of the appointment (business hours are 8am to 5pm only), use military time, for example - 1pm is 13, 5pm is 17  " );
         DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
-               if (DBScheduler.hour > 17 ) 
+               while (DBScheduler.hour > 17 ) 
                 {
                 
-                throw new Exception("Appointment cannot start later than 17:00 ( 5pm Military Time). Please Re-Enter Appointment");
+            try {
+                throw new Exception("Appointment cannot start later than 17:00 ( 5pm Military Time). Please Re-Enter starting number of the hour of the appointment.");
+            } catch (Exception ex) {
+                System.out.println(ex);
+                DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
+            }
                 }
             
-                if (DBScheduler.hour < 8 ) 
+                while (DBScheduler.hour < 8 ) 
                 {
                 
-                throw new Exception("Appointment cannot start earlier than 8:00 ( 8am Military Time). Please Re-Enter Appointment");
+            try {
+                throw new Exception("Appointment cannot start earlier than 8:00 ( 8am Military Time). Please Re-Enter starting number of the hour of the appointment.");
+            } catch (Exception ex) {
+                System.out.println(ex);
+                DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
+            }
+                
                 }
+                        
+                        
             
         System.out.println("Please enter the starting number of the minute of the appointment (example: 15, 30 or 45) " );
         DBScheduler.minute = Integer.parseInt(ScheduleAssist.getScanner().next());
         int second = 0;
         int nanoOfSecond = 0;
         DBScheduler.timezone = timezone.systemDefault();
-        return ZonedDateTime.of(DBScheduler.year,DBScheduler.month,DBScheduler.dayOfMonth,DBScheduler.hour,DBScheduler.minute,second,
+        ZonedDateTime returnZoneDateTime = ZonedDateTime.of(DBScheduler.year,DBScheduler.month,DBScheduler.dayOfMonth,DBScheduler.hour,DBScheduler.minute,second,
                 nanoOfSecond, timezone);
+        Timestamp comparedDay = toTimestamp(returnZoneDateTime);
+                        // Check for overlapping appointments and throw an exception if there is one.
+                        // Get all appointments of the day
+                        // compare DBscheduler.hour with appointment considering the hour
+                        // throw exception if they overlap
+                            System.out.println ("Checking for overlapping appointments");
+                            LocalDate currentDay = LocalDate.now(); 
+                            String selectSQL = "SELECT start, end FROM appointment WHERE start LIKE '%"+currentDay + "%' ";
+                            try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
+                                ResultSet rs = stmt.executeQuery(selectSQL);
+                                while (rs.next()) {
+                                Timestamp retrievedappointmentStart = rs.getTimestamp("start");
+                                Timestamp retrievedappointmentEnd = rs.getTimestamp("end");
+                                if (comparedDay.after(retrievedappointmentEnd) || comparedDay.before(retrievedappointmentStart) ) 
+                                {
+                                    
+                                }
+                                else 
+                                {
+                                    try {
+                                      throw new Exception("Appointment overlaps with another appointment between the times" + " " + retrievedappointmentStart + " and " + retrievedappointmentEnd );
+                                    } catch (Exception ex) {
+                                        System.out.println(ex);
+                                        DBScheduler.isEndAppointment = false;
+                                        getAppointmentDate();
+                                        
+                                    }
+                                }
+
+                                }
+                                System.out.println ("No overlapping appointments found");
+                            
+                            }
+                            catch (SQLException ex) {
+                                    Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+         return returnZoneDateTime;              
         }
+        
     }
     
     
@@ -364,23 +455,12 @@ public class DBScheduler {
         }
         if (DBScheduler.doesDateNeedUpdated) {
             
-            try {
-                DBScheduler.start = getAppointmentDate();
-            } catch (Exception ex) {
-                System.out.println(ex);
-                entrySchedule ();
-            }
-            
+            DBScheduler.start = getAppointmentDate();
+
             DBScheduler.isEndAppointment = true;
             
-            try {
-                DBScheduler.end = getAppointmentDate();
-            } catch (Exception ex) {
-                System.out.println(ex);
-                DBScheduler.isEndAppointment = false;
-                entrySchedule ();
-            }
-            
+            DBScheduler.end = getAppointmentDate();
+
             DBScheduler.isEndAppointment = false;
 
             String updateSQLString = "UPDATE appointment SET start = ? , end = ?, lastUpdate = ? , lastUpdateBy = ?  WHERE appointmentId = ? ";

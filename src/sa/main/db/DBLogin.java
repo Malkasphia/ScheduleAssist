@@ -49,8 +49,8 @@ public boolean userDBGet (String userInputName, String userInputPassword) {
 
                             }
                    if (noMatchingFound) {
-                    try {System.out.println("Username and Password did not match. Please re-enter Username and Password.");}
-                    catch (Exception ex){System.out.println("Username and Password did not match. Please re-enter Username and Password.");}
+                    try { throw new Exception("Username and Password did not match. Please re-enter Username and Password."); }
+                    catch (Exception ex){System.out.println(ex);}
                     return false;
                     
                     
