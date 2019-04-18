@@ -27,11 +27,13 @@ public class ScheduleAssist {
     static String userLoggedIn = "Not Logged In";
     
     public static void main(String[] args) {
-        //Initialize objects for logging into database, insertion, updating, scheduler.
+        //Initialize objects for logging into database, insertion, updating, scheduler, and scanner to use new lines as delimiter.
+        scanner.useDelimiter("\\n");
         DBLogin connect = new DBLogin();
         DBInserter inserter = new DBInserter();
         DBUpdater updater = new DBUpdater();
         DBScheduler scheduler = new DBScheduler();
+        
         //Username Login Process
         System.out.println("Welcome to Schedule Assist V 0.1");
         ScheduleAssist.startLogin(connect);
@@ -42,7 +44,11 @@ public class ScheduleAssist {
         System.out.println("4. Update an appointment ");
         System.out.println("5. View Weekly Schedule");
         System.out.println("6. View Monthly Schedule");
+        
         int userChoiceInput = Integer.parseInt(scanner.next());
+        
+            
+        
         ScheduleAssist.userInterface(userChoiceInput,inserter,updater,scheduler);
  
     }
@@ -85,13 +91,44 @@ public class ScheduleAssist {
         /* Once Switch is completed, the restart Switch function  is called again unless exit the program was selected, 
           in which case a confirm action is asked. */
         //Insert Code for this.
+    
+    //REWRITE THIS METHOD AND MAKE IT EASIER TO USE AND ISOLATED
     private static void userInterface (int userChoice, DBInserter DBInserterObject, DBUpdater DBUpdaterObject, DBScheduler DBSchedulerObject ) {
         
        switch (userChoice) {
            
            case 1: 
-               System.out.println("Please enter the Customer Name. Limit 45 characters");
-               String inputCustomerName = scanner.next();
+               System.out.println("Please enter the Customer Name. Name limit is 20 characters. May not contain spaces.");
+               String inputCustomerName = null ;
+               
+               
+               inputCustomerName = scanner.next();
+               
+               System.out.println ("Input of " + inputCustomerName);
+               
+                    if (inputCustomerName.contains(" "))
+                    {
+                        try 
+                        {
+                            throw new Exception(" Space detected in customer name, please try again. ");
+                        }
+                        catch (Exception ex) 
+                        {
+                            System.out.println (ex);
+                            System.out.println(userLoggedIn + ", please enter a number to the corresponding action you wish to complete.");
+                            System.out.println("1. Create New Customer Record ");
+                            System.out.println("2. Update a Customer Record ");
+                            System.out.println("3. Schedule an appointment ");
+                            System.out.println("4. Update an appointment ");
+                            System.out.println("5. View Weekly Schedule");
+                            System.out.println("6. View Monthly Schedule");
+                            int userChoiceInput = Integer.parseInt(scanner.next());
+                            String[] args = new String [10];
+                            ScheduleAssist.main(args);
+                            return;
+                        }
+                    }
+               
                System.out.println("Please enter the Address ID. Limit 10 numbers.");
                int inputAddressID = Integer.parseInt(scanner.next());
                System.out.println("Please enter the active state. Choose 1 for active. 0 for inactive.");
