@@ -14,25 +14,32 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sa.main.db.*;
+
 /**
  *
  * @author Mal
  */
+
 public class ScheduleAssist {
 
     /**
      * @param args the command line arguments
      */
+    
+    
     static Scanner scanner = new Scanner(System.in);
     static String userLoggedIn = "Not Logged In";
+    static DBLogin connect = new DBLogin();
+    static DBInserter inserter = new DBInserter();
+    static DBUpdater updater = new DBUpdater();
+    static DBScheduler scheduler = new DBScheduler();
+    
     
     public static void main(String[] args) {
         //Initialize objects for logging into database, insertion, updating, scheduler, and scanner to use new lines as delimiter.
         scanner.useDelimiter("\\n");
-        DBLogin connect = new DBLogin();
-        DBInserter inserter = new DBInserter();
-        DBUpdater updater = new DBUpdater();
-        DBScheduler scheduler = new DBScheduler();
+        
+        
         
         //Username Login Process
         System.out.println("Welcome to Schedule Assist V 0.1");
@@ -99,7 +106,7 @@ public class ScheduleAssist {
            
            case 1: 
                System.out.println("Please enter the Customer Name. Name limit is 20 characters. May not contain spaces.");
-               String inputCustomerName = null ;
+               String inputCustomerName = null;
                
                
                inputCustomerName = scanner.next();
@@ -110,6 +117,7 @@ public class ScheduleAssist {
                     {
                         try 
                         {
+                            
                             throw new Exception(" Space detected in customer name, please try again. ");
                         }
                         catch (Exception ex) 
@@ -123,8 +131,7 @@ public class ScheduleAssist {
                             System.out.println("5. View Weekly Schedule");
                             System.out.println("6. View Monthly Schedule");
                             int userChoiceInput = Integer.parseInt(scanner.next());
-                            String[] args = new String [10];
-                            ScheduleAssist.main(args);
+                            userInterface (userChoiceInput,inserter,updater,scheduler);
                             return;
                         }
                     }

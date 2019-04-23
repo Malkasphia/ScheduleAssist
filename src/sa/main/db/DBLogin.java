@@ -22,7 +22,7 @@ public class DBLogin {
     //Connect to the Database, run 1st as it gets connection from Driver Manager
     //Select Users from Database to validate login
 public boolean userDBGet (String userInputName, String userInputPassword) {
-    //comment
+    
         
         try (Statement stmt = DBConnector.startConnecting().createStatement()) {
             boolean noMatchingFound = true;
