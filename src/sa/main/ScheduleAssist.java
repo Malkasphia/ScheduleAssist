@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sa.main.db.*;
+import static sa.main.db.DBExceptions.isInvalidData;
 
 /**
  *
@@ -33,6 +34,7 @@ public class ScheduleAssist {
     static DBInserter inserter = new DBInserter();
     static DBUpdater updater = new DBUpdater();
     static DBScheduler scheduler = new DBScheduler();
+    static DBExceptions exception = new DBExceptions();
     
     
     public static void main(String[] args) {
@@ -118,7 +120,10 @@ public class ScheduleAssist {
                         try 
                         {
                             
-                            throw new Exception(" Space detected in customer name, please try again. ");
+                            
+                            LambdaException LE = () -> DBExceptions.isSpaceDetected();
+                            String showMessage = LE.errorMessage();
+                            throw new Exception(showMessage);
                         }
                         catch (Exception ex) 
                         {

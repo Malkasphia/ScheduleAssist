@@ -9,6 +9,20 @@ package sa.main.db;
  *
  * @author Mal
  */
+
 public class DBExceptions {
     
+    static String invalidData = "You have entered invalid data. Please try again.";
+    static String spaceDetected = "You have entered a space. Please re-enter data without a space.";
+    
+    public static String isInvalidData () 
+    {return invalidData;}
+    
+    public static String isSpaceDetected () 
+    {return spaceDetected;} 
+            
+    
+    
+    
 }
+
