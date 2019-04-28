@@ -46,13 +46,7 @@ public class ScheduleAssist {
         //Username Login Process
         System.out.println("Welcome to Schedule Assist V 0.1");
         ScheduleAssist.startLogin(connect);
-        System.out.println(userLoggedIn + ", please enter a number to the corresponding action you wish to complete.");
-        System.out.println("1. Create New Customer Record ");
-        System.out.println("2. Update a Customer Record ");
-        System.out.println("3. Schedule an appointment ");
-        System.out.println("4. Update an appointment ");
-        System.out.println("5. View Weekly Schedule");
-        System.out.println("6. View Monthly Schedule");
+        printChoicesforUserInterface();
         
         int userChoiceInput = Integer.parseInt(scanner.next());
         
@@ -107,44 +101,19 @@ public class ScheduleAssist {
        switch (userChoice) {
            
            case 1: 
-               System.out.println("Please enter the Customer Name. Name limit is 20 characters. May not contain spaces.");
+               System.out.println("Please enter the Customer Name. May not contain spaces or be blank.");
                String inputCustomerName = null;
-               
-               
                inputCustomerName = scanner.next();
-               
-               System.out.println ("Input of " + inputCustomerName);
-               
-                    if (inputCustomerName.contains(" "))
-                    {
-                        try 
-                        {
-                            
-                            
-                            LambdaException LE = () -> DBExceptions.isSpaceDetected();
-                            String showMessage = LE.errorMessage();
-                            throw new Exception(showMessage);
-                        }
-                        catch (Exception ex) 
-                        {
-                            System.out.println (ex);
-                            System.out.println(userLoggedIn + ", please enter a number to the corresponding action you wish to complete.");
-                            System.out.println("1. Create New Customer Record ");
-                            System.out.println("2. Update a Customer Record ");
-                            System.out.println("3. Schedule an appointment ");
-                            System.out.println("4. Update an appointment ");
-                            System.out.println("5. View Weekly Schedule");
-                            System.out.println("6. View Monthly Schedule");
-                            int userChoiceInput = Integer.parseInt(scanner.next());
-                            userInterface (userChoiceInput,inserter,updater,scheduler);
-                            return;
-                        }
-                    }
-               
-               System.out.println("Please enter the Address ID. Limit 10 numbers.");
+               //check customer name for containing a space   
+               checkForSpacesAndEmptyForUI(inputCustomerName);
+               System.out.println("Please enter the Address ID. May not contain spaces or be blank.");
                int inputAddressID = Integer.parseInt(scanner.next());
+               String inputAddressIDString = Integer.toString(inputAddressID);
+               checkForSpacesAndEmptyForUI(inputAddressIDString); 
                System.out.println("Please enter the active state. Choose 1 for active. 0 for inactive.");
                short inputActive = Short.parseShort(scanner.next());
+               String inputActiveString = Short.toString(inputActive);
+               checkForSpacesAndEmptyForUI(inputActiveString);
                DBInserterObject.customerInsert(inputCustomerName, inputAddressID, inputActive);
                break;
            case 2:
@@ -178,6 +147,60 @@ public static String getUserLoggedIn () {
 
 public static Scanner getScanner () {
     return scanner;
+}
+
+public static void printChoicesforUserInterface () {
+    System.out.println(userLoggedIn + ", please enter a number to the corresponding action you wish to complete.");
+    System.out.println("1. Create New Customer Record ");
+    System.out.println("2. Update a Customer Record ");
+    System.out.println("3. Schedule an appointment ");
+    System.out.println("4. Update an appointment ");
+    System.out.println("5. View Weekly Schedule");
+    System.out.println("6. View Monthly Schedule");
+}
+
+public static void checkForSpacesAndEmptyForUI (String stringToCheck) {
+                        if (stringToCheck.contains(" "))
+                    {
+                        try 
+                        {
+                            
+                            
+                            LambdaException LESpaceDetected = () -> DBExceptions.isSpaceDetected();
+                            String showMessage = LESpaceDetected.errorMessage();
+                            throw new Exception(showMessage);
+                        }
+                        catch (Exception ex) 
+                        {
+                            System.out.println (ex);
+                            printChoicesforUserInterface();
+                            int userChoiceInput = Integer.parseInt(scanner.next());
+                            userInterface (userChoiceInput,inserter,updater,scheduler);
+                            return;
+                        }
+                    }
+                    //check customer name for being empty
+                    if (stringToCheck.isEmpty()) 
+                    {
+                        
+                        try 
+                        {
+                            
+                            LambdaException LEisEmptyDetected = () -> DBExceptions.isEmptyDetected();
+                            String showMessage = LEisEmptyDetected.errorMessage();
+                            throw new Exception(showMessage);
+                        }
+                        catch (Exception ex) 
+                        {
+                            System.out.println (ex);
+                            printChoicesforUserInterface();
+                            int userChoiceInput = Integer.parseInt(scanner.next());
+                            userInterface (userChoiceInput,inserter,updater,scheduler);
+                            
+                        }
+                    
+                        
+                    }
 }
     
     
