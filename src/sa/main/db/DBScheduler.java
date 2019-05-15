@@ -12,11 +12,10 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sa.main.ScheduleAssist;
-import static sa.main.db.DBInserter.getCurrentTimeStamp;
+
 /**
  *
  * @author Mal

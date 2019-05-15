@@ -24,6 +24,47 @@ public class DBExceptions {
     
     public static String isEmptyDetected () 
     {return isEmpty;} 
+    
+    public static boolean checkForSpacesAndEmpty (String stringToCheck) {
+                        if (stringToCheck.contains(" "))
+                    {
+                        try 
+                        {
+                            LambdaException LESpaceDetected = () -> DBExceptions.isSpaceDetected();
+                            String showMessage = LESpaceDetected.errorMessage();
+                            throw new Exception(showMessage);
+                        }
+                        catch (Exception ex) 
+                        {
+                            System.out.println (ex);
+                            return true;
+                        }
+                    }
+                    //check customer name for being empty
+                    if (stringToCheck.isEmpty()) 
+                    {
+                        
+                        try 
+                        {
+                            
+                            LambdaException LEisEmptyDetected = () -> DBExceptions.isEmptyDetected();
+                            String showMessage = LEisEmptyDetected.errorMessage();
+                            throw new Exception(showMessage);
+                        }
+                        catch (Exception ex) 
+                        {
+                            System.out.println (ex);
+                            return true;
+                            
+                        }
+                        
+                        
+                    }
+                    else {
+                        return false;
+                    }
+                   
+}
             
     
     

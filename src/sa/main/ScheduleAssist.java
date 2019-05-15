@@ -1,18 +1,16 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ To-Do List
+1. Implement ScheduleAssist.checkForSpacesAndEmptyForUI as a new method for DBScheduler and DBUpdater that need input validation
+2. Write a reminder check after user logs in that queries for all appointments and then checks if they are 15 minutes or less from NOW. Prints a reminder of appointment if true.
+3. Implement in ScheduleAssist the ability to generate the following reports - number of appointment types by month, schedule for each consultant, one additional report of choice
+4. Record user log-in timestamps on a log file.
+5. Use locale object to support Spanish and translate log-in messages ( and errors) to Spanish. 
  */
+
 package sa.main;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Scanner;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import sa.main.db.*;
 import static sa.main.db.DBExceptions.isInvalidData;
 
@@ -110,7 +108,7 @@ public class ScheduleAssist {
                int inputAddressID = Integer.parseInt(scanner.next());
                String inputAddressIDString = Integer.toString(inputAddressID);
                checkForSpacesAndEmptyForUI(inputAddressIDString); 
-               System.out.println("Please enter the active state. Choose 1 for active. 0 for inactive.");
+               System.out.println("Please enter the active state. Choose 1 for active. 0 for inactive. May not contain spaces or be blank.");
                short inputActive = Short.parseShort(scanner.next());
                String inputActiveString = Short.toString(inputActive);
                checkForSpacesAndEmptyForUI(inputActiveString);

@@ -27,6 +27,7 @@ public class DBUpdater {
     private static boolean doesNameNeedUpdated = false;
     private static boolean doesAddressIdNeedUpdated = false;
     private static boolean doesStatusNeedUpdated = false;
+    private static DBExceptions ExceptionChecker;
     
     
 
@@ -44,8 +45,15 @@ public class DBUpdater {
                 System.out.println("CustomerId - " + retrievedCustomerId + " Customer Name - " + retrievedCustomerName );
 
             }
-                System.out.println("Please enter the Customer ID of the Customer you wish you update.");
-                DBUpdater.idToBeUpdated = Integer.parseInt(ScheduleAssist.getScanner().next());
+                System.out.println("Please enter the Customer ID of the Customer you wish you update. May not contain spaces or be blank.");
+                String checkID = ScheduleAssist.getScanner().next();
+                 if (ExceptionChecker.checkForSpacesAndEmpty(checkID)) {
+                     customerUpdate ();
+                     return;
+                 }
+                DBUpdater.idToBeUpdated = Integer.parseInt(checkID);
+                
+                
                 System.out.println("Please Enter the number of the option you wish to update for Customer " + DBUpdater.idToBeUpdated);
                 System.out.println("1. Customer Name");
                 System.out.println("2. Address ID");
@@ -54,16 +62,26 @@ public class DBUpdater {
                 switch (Integer.parseInt(ScheduleAssist.getScanner().next())) {
            // Updates doesNameNeedUpdated to true, updates customer table with new customer name and latest update and user who updated it. Changes doesNameNeedUpdated to false to reset.
            case 1: 
-               System.out.println("Please Enter the new name for Customer " + DBUpdater.idToBeUpdated + ", limit is 40 characters");
-               DBUpdater.nameToBeUpdated = ScheduleAssist.getScanner().next();
+               System.out.println("Please Enter the new name for Customer " + DBUpdater.idToBeUpdated + ", limit is 40 characters. May not contain spaces or be blank.");
+               String checkName = ScheduleAssist.getScanner().next();
+                 if (ExceptionChecker.checkForSpacesAndEmpty(checkName)) {
+                     customerUpdate ();
+                     return;
+                 }
+               DBUpdater.nameToBeUpdated = checkName;
                DBUpdater.doesNameNeedUpdated = true;
                changeCustomerRecord();
                DBUpdater.doesNameNeedUpdated = false;
                break;
            // Updates doesAddressIdNeedUpdated to true, updates customer table with new Address ID, latest update time, and user who updated. Changes doesAddressIdNeedUpdated to false to reset.
            case 2:
-               System.out.println("Please Enter the new Address ID for Customer " + DBUpdater.idToBeUpdated + ", limit is 10 numbers");
-               DBUpdater.addressIdToBeUpdated = Integer.parseInt(ScheduleAssist.getScanner().next());
+               System.out.println("Please Enter the new Address ID for Customer " + DBUpdater.idToBeUpdated + ", limit is 10 numbers. May not contain spaces or be blank.");
+               String checkAddressID = ScheduleAssist.getScanner().next();
+                 if (ExceptionChecker.checkForSpacesAndEmpty(checkAddressID)) {
+                     customerUpdate ();
+                     return;
+                 }
+               DBUpdater.addressIdToBeUpdated = Integer.parseInt(checkAddressID);
                DBUpdater.doesAddressIdNeedUpdated = true;
                changeCustomerRecord();
                DBUpdater.doesAddressIdNeedUpdated = false;
@@ -71,7 +89,12 @@ public class DBUpdater {
            // Updates doesStatusNeedUpdated to true, updates customer table with new status ID, 0 for inactive, 1 for active, latest update time, and user who updated. Changes doesStatusNeedUpdated to false to reset.
            case 3:
                System.out.println("Please Enter the new Status ID for Customer " + DBUpdater.idToBeUpdated + ": 0 for inactive, 1 for active.");
-               DBUpdater.statusToBeUpdated = Short.parseShort(ScheduleAssist.getScanner().next());
+               String checkStatusID = ScheduleAssist.getScanner().next();
+                 if (ExceptionChecker.checkForSpacesAndEmpty(checkStatusID)) {
+                     customerUpdate ();
+                     return;
+                 }
+               DBUpdater.statusToBeUpdated = Short.parseShort(checkStatusID);
                DBUpdater.doesStatusNeedUpdated = true;
                changeCustomerRecord();
                DBUpdater.doesStatusNeedUpdated = false;
