@@ -1,10 +1,10 @@
 /*
  To-Do List
-1. Implement ScheduleAssist.checkForSpacesAndEmptyForUI as a new method for DBScheduler and DBUpdater that need input validation
-2. Write a reminder check after user logs in that queries for all appointments and then checks if they are 15 minutes or less from NOW. Prints a reminder of appointment if true.
-3. Implement in ScheduleAssist the ability to generate the following reports - number of appointment types by month, schedule for each consultant, one additional report of choice
-4. Record user log-in timestamps on a log file.
-5. Use locale object to support Spanish and translate log-in messages ( and errors) to Spanish. 
+1. Write a reminder check after user logs in that queries for all appointments and then checks if they are 15 minutes or less from NOW. Prints a reminder of appointment if true.
+2. Implement in ScheduleAssist the ability to generate the following reports - number of appointment types by month, schedule for each consultant, one additional report of choice
+3. Record user log-in timestamps on a log file.
+4. Use locale object to support Spanish and translate log-in messages ( and errors) to Spanish. 
+5. Generate readme document for evaluator to prove each part of the rubric has been fulfilled and how to use any specific parts.
  */
 
 package sa.main;

@@ -27,7 +27,6 @@ public class DBUpdater {
     private static boolean doesNameNeedUpdated = false;
     private static boolean doesAddressIdNeedUpdated = false;
     private static boolean doesStatusNeedUpdated = false;
-    private static DBExceptions ExceptionChecker;
     
     
 
@@ -47,7 +46,7 @@ public class DBUpdater {
             }
                 System.out.println("Please enter the Customer ID of the Customer you wish you update. May not contain spaces or be blank.");
                 String checkID = ScheduleAssist.getScanner().next();
-                 if (ExceptionChecker.checkForSpacesAndEmpty(checkID)) {
+                 if (DBExceptions.checkForSpacesAndEmpty(checkID)) {
                      customerUpdate ();
                      return;
                  }
@@ -64,7 +63,7 @@ public class DBUpdater {
            case 1: 
                System.out.println("Please Enter the new name for Customer " + DBUpdater.idToBeUpdated + ", limit is 40 characters. May not contain spaces or be blank.");
                String checkName = ScheduleAssist.getScanner().next();
-                 if (ExceptionChecker.checkForSpacesAndEmpty(checkName)) {
+                 if (DBExceptions.checkForSpacesAndEmpty(checkName)) {
                      customerUpdate ();
                      return;
                  }
@@ -77,7 +76,7 @@ public class DBUpdater {
            case 2:
                System.out.println("Please Enter the new Address ID for Customer " + DBUpdater.idToBeUpdated + ", limit is 10 numbers. May not contain spaces or be blank.");
                String checkAddressID = ScheduleAssist.getScanner().next();
-                 if (ExceptionChecker.checkForSpacesAndEmpty(checkAddressID)) {
+                 if (DBExceptions.checkForSpacesAndEmpty(checkAddressID)) {
                      customerUpdate ();
                      return;
                  }
@@ -90,7 +89,7 @@ public class DBUpdater {
            case 3:
                System.out.println("Please Enter the new Status ID for Customer " + DBUpdater.idToBeUpdated + ": 0 for inactive, 1 for active.");
                String checkStatusID = ScheduleAssist.getScanner().next();
-                 if (ExceptionChecker.checkForSpacesAndEmpty(checkStatusID)) {
+                 if (DBExceptions.checkForSpacesAndEmpty(checkStatusID)) {
                      customerUpdate ();
                      return;
                  }

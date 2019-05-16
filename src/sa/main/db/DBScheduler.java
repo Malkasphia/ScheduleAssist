@@ -59,6 +59,7 @@ public class DBScheduler {
     private static boolean doesDescriptionIdNeedUpdated = false;
     private static boolean doesContactNeedUpdated = false;
     private static boolean doesDateNeedUpdated = false;
+
     
             
     //Class Methods
@@ -100,19 +101,44 @@ public class DBScheduler {
                 System.out.println("CustomerId - " + retrievedCustomerId + " Customer Name - " + retrievedCustomerName );
 
             }
-            System.out.println("Please enter the Customer ID of the Customer you wish to schedule.");
-            DBScheduler.idEntered = Integer.parseInt(ScheduleAssist.getScanner().next());
+            System.out.println("Please enter the Customer ID of the Customer you wish to schedule. May not contain spaces or be blank.");
+            String checkID = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkID)) {
+                     scheduling ();
+                     return;
+                 }
+            DBScheduler.idEntered = Integer.parseInt(checkID);
             String insertSQL = "INSERT INTO appointment"
                             + "(customerId,title,description,location,contact,url,start,end,createDate,createdBy,lastUpdate,lastUpdateBy)VALUES"
                             + "(?,?,?,?,?,?,?,?,?,?,?,?)";
-            System.out.println("Please enter the title of the appointment for Customer, use _ or - for spaces. "  );
-            DBScheduler.titleEntered = ScheduleAssist.getScanner().next();
-            System.out.println("Please enter the description of the appointment for Customer, use _ or - for spaces. "  );
-            DBScheduler.descriptionEntered = ScheduleAssist.getScanner().next();
-            System.out.println("Please enter the location of the appointment for Customer, use _ or - for spaces. "  );
-            DBScheduler.locationEntered = ScheduleAssist.getScanner().next();
-            System.out.println("Please enter the contact phone number for Customer , use _ or - for spaces."  );
-            DBScheduler.contactEntered = ScheduleAssist.getScanner().next();
+            System.out.println("Please enter the title of the appointment for Customer. May not contain spaces or be blank."  );
+            String checkTitle = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkTitle)) {
+                     scheduling ();
+                     return;
+                 }
+            DBScheduler.titleEntered = checkTitle;
+            System.out.println("Please enter the description of the appointment for Customer. May not contain spaces or be blank. "  );
+            String checkDescription = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkDescription)) {
+                     scheduling ();
+                     return;
+                 }
+            DBScheduler.descriptionEntered = checkDescription;
+            System.out.println("Please enter the location of the appointment for Customer. May not contain spaces or be blank. "  );
+            String checkLocation = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkLocation)) {
+                     scheduling ();
+                     return;
+                 }
+            DBScheduler.locationEntered = checkLocation;
+            System.out.println("Please enter the contact phone number for Customer. May not contain spaces or be blank."  );
+            String checkContact = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkContact)) {
+                     scheduling ();
+                     return;
+                 }
+            DBScheduler.contactEntered = checkContact;
             
 
             DBScheduler.start = getAppointmentDate();
@@ -162,12 +188,27 @@ public class DBScheduler {
     private  ZonedDateTime getAppointmentDate() {
         if (DBScheduler.isEndAppointment)
         {
-        System.out.println("Please enter the ending month of the appointment, 1 through 12" );
-        DBScheduler.month = Integer.parseInt(ScheduleAssist.getScanner().next());
-        System.out.println("Please enter the ending number of the day of the month for the appointment (example: 1 through 31 " );
-        DBScheduler.dayOfMonth = Integer.parseInt(ScheduleAssist.getScanner().next());
-        System.out.println("Please enter the ending number of the hour of the appointment (business hours are 8am to 5pm only), use military time, for example - 1pm is 13, 5pm is 17 " );
-        DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
+        System.out.println("Please enter the ending month of the appointment, 1 through 12. May not contain a space or be blank." );
+        String checkEndingMonth = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkEndingMonth)) {
+                     scheduling ();
+                     return null;
+                 }
+        DBScheduler.month = Integer.parseInt(checkEndingMonth);
+        System.out.println("Please enter the ending number of the day of the month for the appointment (example: 1 through 31). May not contain a space or be blank. " );
+        String checkEndingDay = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkEndingDay)) {
+                     scheduling ();
+                     return null;
+                 }
+        DBScheduler.dayOfMonth = Integer.parseInt(checkEndingDay);
+        System.out.println("Please enter the ending number of the hour of the appointment (business hours are 8am to 5pm only), use military time, for example - 1pm is 13, 5pm is 17. May not contain a space or be blank. " );
+        String checkEndingHour = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkEndingHour)) {
+                     scheduling ();
+                     return null;
+                 }
+        DBScheduler.hour = Integer.parseInt(checkEndingHour);
                 while (DBScheduler.hour > 17 ) 
                 {
             try {
@@ -192,8 +233,13 @@ public class DBScheduler {
             }
                 }
             
-        System.out.println("Please enter the ending number of the minute of the appointment (example: 15, 30 or 45) " );
-        DBScheduler.minute = Integer.parseInt(ScheduleAssist.getScanner().next());
+        System.out.println("Please enter the ending number of the minute of the appointment (example: 15, 30 or 45). May not contain a space or be blank. " );
+        String checkEndingMinute = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkEndingMinute)) {
+                     scheduling ();
+                     return null;
+                 }
+        DBScheduler.minute = Integer.parseInt(checkEndingMinute);
         int second = 0;
         int nanoOfSecond = 0;
         DBScheduler.timezone = timezone.systemDefault();
@@ -240,12 +286,27 @@ public class DBScheduler {
         }
         
         else {
-        System.out.println("Please enter the starting month of the appointment, 1 through 12" );
-        DBScheduler.month = Integer.parseInt(ScheduleAssist.getScanner().next());
-        System.out.println("Please enter the starting number of the day of the month for the appointment (example: 1 through 31 " );
-        DBScheduler.dayOfMonth = Integer.parseInt(ScheduleAssist.getScanner().next());
-        System.out.println("Please enter the starting number of the hour of the appointment (business hours are 8am to 5pm only), use military time, for example - 1pm is 13, 5pm is 17  " );
-        DBScheduler.hour = Integer.parseInt(ScheduleAssist.getScanner().next());
+        System.out.println("Please enter the starting month of the appointment, 1 through 12. May not contain a space or be blank. " );
+        String checkStartingMonth = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkStartingMonth)) {
+                     scheduling ();
+                     return null;
+                 }
+        DBScheduler.month = Integer.parseInt(checkStartingMonth);
+        System.out.println("Please enter the starting number of the day of the month for the appointment (example: 1 through 31. May not contain a space or be blank. " );
+        String checkStartingDay = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkStartingDay)) {
+                     scheduling ();
+                     return null;
+                 }
+        DBScheduler.dayOfMonth = Integer.parseInt(checkStartingDay);
+        System.out.println("Please enter the starting number of the hour of the appointment (business hours are 8am to 5pm only), use military time, for example - 1pm is 13, 5pm is 17. May not contain a space or be blank.   " );
+        String checkStartingHour = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkStartingHour)) {
+                     scheduling ();
+                     return null;
+                 }
+        DBScheduler.hour = Integer.parseInt(checkStartingHour);
                while (DBScheduler.hour > 17 ) 
                 {
                 
@@ -271,8 +332,13 @@ public class DBScheduler {
                         
                         
             
-        System.out.println("Please enter the starting number of the minute of the appointment (example: 15, 30 or 45) " );
-        DBScheduler.minute = Integer.parseInt(ScheduleAssist.getScanner().next());
+        System.out.println("Please enter the starting number of the minute of the appointment (example: 15, 30 or 45). May not contain a space or be blank. " );
+        String checkStartingMinute = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkStartingMinute)) {
+                     scheduling ();
+                     return null;
+                 }
+        DBScheduler.minute = Integer.parseInt(checkStartingMinute);
         int second = 0;
         int nanoOfSecond = 0;
         DBScheduler.timezone = timezone.systemDefault();
@@ -350,8 +416,13 @@ public class DBScheduler {
                 System.out.println("Appointment ID - " + retrievedappointmentId + " Appointment Title - " + retrievedTitle );
 
             }
-            System.out.println("Please enter the Appointment ID of the Appointment you wish you update.");
-            DBScheduler.idEntered = Integer.parseInt(ScheduleAssist.getScanner().next());
+            System.out.println("Please enter the Appointment ID of the Appointment you wish you update. May not contain a space or be blank.");
+            String checkAppointmentID = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkAppointmentID)) {
+                     updateScheduling ();
+                     return;
+                 }
+            DBScheduler.idEntered = Integer.parseInt(checkAppointmentID);
             System.out.println("Please Enter the number of the option you wish to update for Appointment " + DBScheduler.idEntered);
                 System.out.println("1. Appointment Title");
                 System.out.println("2. Appointment Description");
@@ -361,24 +432,39 @@ public class DBScheduler {
                 switch (Integer.parseInt(ScheduleAssist.getScanner().next())) {
                 // Updates doesTitleNeedUpdated to true, updates appointment table with new appointment title ,latest update timestamp, and user who updated it. Changes doesTitleNeedUpdated to false to reset.
                     case 1:
-                        System.out.println("Please Enter the new title for Appointment " + DBScheduler.idEntered + ", limit is 40 characters, use _ or - for spaces.");
-                        DBScheduler.titleEntered = ScheduleAssist.getScanner().next();
+                        System.out.println("Please Enter the new title for Appointment " + DBScheduler.idEntered + ", .May not contain spaces or be blank.");
+                 String checkTitle = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkTitle)) {
+                     updateScheduling ();
+                     return;
+                 }
+                        DBScheduler.titleEntered = checkTitle;
                         DBScheduler.doesTitleNeedUpdated = true;
                         changeAppointmentRecord();
                         DBScheduler.doesTitleNeedUpdated = false;
                         break;
                 // Updates doesDescriptionIdNeedUpdated to true, updates appointment table with new appointment title ,latest update timestamp, and user who updated it. Changes doesDescriptionIdNeedUpdated to false to reset.
                     case 2:
-                        System.out.println("Please Enter the new description for Appointment " + DBScheduler.idEntered + ", limit is 40 characters, use _ or - for spaces.");
-                        DBScheduler.descriptionEntered = ScheduleAssist.getScanner().next();
+                        System.out.println("Please Enter the new description for Appointment " + DBScheduler.idEntered + ".May not contain spaces or be blank.");
+                        String checkDescription = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkDescription)) {
+                     updateScheduling ();
+                     return;
+                 }
+                        DBScheduler.descriptionEntered = checkDescription;
                         DBScheduler.doesDescriptionIdNeedUpdated = true;
                         changeAppointmentRecord();
                         DBScheduler.doesDescriptionIdNeedUpdated = false;
                         break;
                 // Updates doesContactNeedUpdated to true, updates appointment table with new appointment contact ,latest update timestamp, and user who updated it. Changes doesContactNeedUpdated to false to reset.
                     case 3:
-                        System.out.println("Please Enter the new contact information for Appointment " + DBScheduler.idEntered + ", limit is 40 characters,, use _ or - for spaces.");
-                        DBScheduler.contactEntered = ScheduleAssist.getScanner().next();
+                        System.out.println("Please Enter the new contact information for Appointment " + DBScheduler.idEntered + " May not contain spaces or be blank.");
+                         String checkContact = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(checkContact)) {
+                     updateScheduling ();
+                     return;
+                 }
+                        DBScheduler.contactEntered = checkContact;
                         DBScheduler.doesContactNeedUpdated = true;
                         changeAppointmentRecord();
                         DBScheduler.doesContactNeedUpdated = false;
