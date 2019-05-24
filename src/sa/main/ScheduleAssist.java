@@ -9,8 +9,16 @@
 
 package sa.main;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sa.main.db.*;
 import static sa.main.db.DBExceptions.isInvalidData;
 
@@ -44,6 +52,7 @@ public class ScheduleAssist {
         //Username Login Process
         System.out.println("Welcome to Schedule Assist V 0.1");
         ScheduleAssist.startLogin(connect);
+        appointmentReminder();
         printChoicesforUserInterface();
         
         int userChoiceInput = Integer.parseInt(scanner.next());
@@ -76,11 +85,7 @@ public class ScheduleAssist {
             userPassword = scanner.next();
             restartCheck = dataBaseQueried.userDBGet(userLoginName, userPassword);
             }
-            
-            
-        
-        
-           
+     
     }
     
     /*
@@ -199,6 +204,41 @@ public static void checkForSpacesAndEmptyForUI (String stringToCheck) {
                     
                         
                     }
+}
+
+// Work in progress for checking if appointment is within 15 minutes or less - used after loggin in
+private static void appointmentReminder () {
+    LocalDate todayToday = LocalDate.now();
+    Timestamp currentDay = new Timestamp(System.currentTimeMillis());
+    LocalDateTime comparedDaySetup = currentDay.toLocalDateTime();
+    comparedDaySetup = comparedDaySetup.plusMinutes(15);
+    Timestamp appointmentFifteenMinutesInFutureComparison = Timestamp.valueOf(comparedDaySetup);
+    
+    
+                        // Check for overlapping appointments and throw an exception if there is one.
+                        // Get all appointments of the day
+                        // compare DBscheduler.hour with appointment considering the hour
+                        // throw exception if they overlap
+                            System.out.println ("Checking for appointments within 15 minutes");
+                            
+                            String selectSQL = "SELECT title, start FROM appointment WHERE start LIKE '%"+todayToday + "%' ";
+                            try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
+                                ResultSet rs = stmt.executeQuery(selectSQL);
+                                while (rs.next()) {
+                                String retrievedTitle = rs.getString("title");
+                                Timestamp retrievedappointmentStart = rs.getTimestamp("start");
+                                if (retrievedappointmentStart.before(appointmentFifteenMinutesInFutureComparison) && retrievedappointmentStart.after(currentDay)) 
+                                {
+                                 System.out.println("You have an appointment coming up within the next 15 minutes - " + "Appointment Title - " + retrievedTitle + "Appointment Date -" + retrievedappointmentStart );   
+                                }
+                                else {
+                                     System.out.println ("No upcoming appointments found");
+                                }
+                                }
+                            }
+                            catch (SQLException ex) {
+                                    Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
 }
     
     

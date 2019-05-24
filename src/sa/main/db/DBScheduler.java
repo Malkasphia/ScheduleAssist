@@ -307,7 +307,7 @@ public class DBScheduler {
                      return null;
                  }
         DBScheduler.hour = Integer.parseInt(checkStartingHour);
-               while (DBScheduler.hour > 17 ) 
+               while (DBScheduler.hour >= 17 ) 
                 {
                 
             try {
@@ -625,7 +625,7 @@ public class DBScheduler {
       
    
   // Provides the view of week, 1st-30th or 31st, for all appointments by all consultants.
-   private void printDayAppointments (LocalDate currentDay ) {
+   public void printDayAppointments (LocalDate currentDay ) {
        System.out.println(currentDay);
         String selectSQL = "SELECT appointmentId, title, start FROM appointment WHERE start LIKE '%"+currentDay + "%'" ;
         
