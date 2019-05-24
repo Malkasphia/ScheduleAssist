@@ -41,6 +41,7 @@ public class ScheduleAssist {
     static DBUpdater updater = new DBUpdater();
     static DBScheduler scheduler = new DBScheduler();
     static DBExceptions exception = new DBExceptions();
+    static DBReports reporter = new DBReports();
     
     
     public static void main(String[] args) {
@@ -134,6 +135,10 @@ public class ScheduleAssist {
            case 6:
                DBSchedulerObject.viewMonth();
                break;
+           case 7:
+               DBReports.appointmentNumberByMonth();
+               break;
+               
        }
         
     }
@@ -160,6 +165,7 @@ public static void printChoicesforUserInterface () {
     System.out.println("4. Update an appointment ");
     System.out.println("5. View Weekly Schedule");
     System.out.println("6. View Monthly Schedule");
+    System.out.println("7. View report for number of appointment types by month.");
 }
 
 public static void checkForSpacesAndEmptyForUI (String stringToCheck) {
