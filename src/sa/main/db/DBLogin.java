@@ -22,7 +22,7 @@ public class DBLogin {
     //Connect to the Database, run 1st as it gets connection from Driver Manager
     //Select Users from Database to validate login
 public boolean userDBGet (String userInputName, String userInputPassword) {
-    //comment
+    
         
         try (Statement stmt = DBConnector.startConnecting().createStatement()) {
             boolean noMatchingFound = true;
@@ -49,7 +49,8 @@ public boolean userDBGet (String userInputName, String userInputPassword) {
 
                             }
                    if (noMatchingFound) {
-                    System.out.println("Username and Password did not match. Please re-enter Username and Password.");
+                    try { throw new Exception("Username and Password did not match. Please re-enter Username and Password."); }
+                    catch (Exception ex){System.out.println(ex);}
                     return false;
                     
                     
