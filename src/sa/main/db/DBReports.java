@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sa.main.ScheduleAssist;
 
 /**
  *
@@ -27,18 +28,25 @@ public class DBReports {
     
     // Get appointments to add to arraylist.
     public static void appointmentNumberByMonth () {
-
-                            System.out.println ("Gathering report for number of appointment types by month.");
+        System.out.println ("Please enter the number of the month you want to the report for. Please enter a 0 if there is no ten's place (ex - January is 01). May not contain a space or be blank.");
+            String MonthOfAppointment = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(MonthOfAppointment)) {
+                     return;
+                 }
+                            System.out.println ("Gathering report for number of appointment types by month for the month of " + MonthOfAppointment);
                             LocalDate currentDay = LocalDate.now();
-                            ArrayList<String> appointmentTitles = new ArrayList<>();
+                            int retrievedCount = 0;
+                            int monthOfYearSQL = 0;
+                                                     
       try {
-            for (int intOfMonth = 1; intOfMonth <= 32; intOfMonth++)
-                currentDay.withDayOfMonth(intOfMonth);                          
-                            String selectSQL = "SELECT title FROM appointment WHERE start LIKE '%"+currentDay + "%'";
+                        
+                            String selectSQL = "SELECT COUNT(DISTINCT title) AS total FROM appointment WHERE start LIKE '2019-"+MonthOfAppointment+"%'";
                             try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
                                 ResultSet rs = stmt.executeQuery(selectSQL);
                                 while (rs.next()) {
-                                appointmentTitles.add(rs.getString("title"));
+                                retrievedCount = rs.getInt("total");
+                                System.out.println ("Number of Appointments for " + "2019 - " + monthOfYearSQL + " "+ retrievedCount);  
+                                
                                 }
                                 
                                 
@@ -52,10 +60,11 @@ public class DBReports {
 
         }
         catch (DateTimeException ex) {
-            System.out.println(" No Appointments after the last date. ");
+            System.out.println(" DateTime Exception Found ");
    
         }
-        System.out.println ("Number of Appointments for the month of " + currentDay.getMonth() + " : " + appointmentTitles.size());           
+                 
+                
 }
     
     
