@@ -67,6 +67,46 @@ public class DBReports {
                 
 }
     
+        public static void appointmentDailyScheduleForConsultant () {
+            LocalDate currentDay = LocalDate.now();
+            System.out.println ("Gathering list of appointments today for all consultants" );
+            String selectSQL = "SELECT title, createdBy FROM appointment WHERE start LIKE '"+currentDay+"%' ORDER BY createdBy";
+                            try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
+                                ResultSet rs = stmt.executeQuery(selectSQL);
+                                while (rs.next()) {
+                                String retrievedTitle = rs.getString("title");
+                                String retrievedCreatedBy = rs.getString("createdBy");
+                                System.out.println ("Appointment Title - " + retrievedTitle + "Consultant Scheduled - " + retrievedCreatedBy );  
+                                
+                                }
+ 
+                            }
+                            catch (SQLException ex) {
+                                    Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+        
+        
+        }
+        
+                public static void allCustomersReport () {
+            System.out.println ("Gathering list of all customers." );
+            String selectSQL = "SELECT customerName FROM customer ";
+                            try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
+                                ResultSet rs = stmt.executeQuery(selectSQL);
+                                while (rs.next()) {
+                                String retrievedCustomerName = rs.getString("customerName");
+                                System.out.println ("Customer Name - " + retrievedCustomerName );  
+                                
+                                }
+   
+                            }
+                            catch (SQLException ex) {
+                                    Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+        
+        
+        }
+    
     
     
 }

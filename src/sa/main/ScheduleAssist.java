@@ -138,6 +138,12 @@ public class ScheduleAssist {
            case 7:
                DBReports.appointmentNumberByMonth();
                break;
+           case 8:
+               DBReports.appointmentDailyScheduleForConsultant();
+               break;
+           case 9:
+               DBReports.allCustomersReport();
+               break;
                
        }
         
@@ -166,6 +172,8 @@ public static void printChoicesforUserInterface () {
     System.out.println("5. View Weekly Schedule");
     System.out.println("6. View Monthly Schedule");
     System.out.println("7. View report for number of appointment types by month.");
+    System.out.println("8. View report for today's appointments for each Consultant.");
+    System.out.println("9. View report of all customers.");
 }
 
 public static void checkForSpacesAndEmptyForUI (String stringToCheck) {
