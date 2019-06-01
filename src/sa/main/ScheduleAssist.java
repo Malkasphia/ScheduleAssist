@@ -42,7 +42,6 @@ public class ScheduleAssist {
     static DBScheduler scheduler = new DBScheduler();
     static DBExceptions exception = new DBExceptions();
     static DBReports reporter = new DBReports();
-    static DBLogger logger = new DBLogger();
     
     
     public static void main(String[] args) {
@@ -52,6 +51,7 @@ public class ScheduleAssist {
         System.out.println("Welcome to Schedule Assist V 1.0");
         ScheduleAssist.startLogin(connect);
         appointmentReminder();
+        DBLogger.recordUserLogin();
         printChoicesforUserInterface();
         int userChoiceInput = Integer.parseInt(scanner.next());
         ScheduleAssist.userInterface(userChoiceInput,inserter,updater,scheduler);
