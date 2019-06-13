@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert;
@@ -40,7 +41,13 @@ public boolean userDBGet (String userInputName, String userInputPassword) {
                 
                 
                 if (userName.equals(userInputName) & userPassword.equals(userInputPassword)) {
-                    System.out.println("Welcome" + " " + userInputName);
+                                    if (Locale.getDefault().equals(ScheduleAssist.getAmericanEnglishLocale())){
+                                        System.out.println("Welcome" + " " + userInputName);
+                                    }
+                                    else {
+                                   System.out.println("Bienvenido" + " " + userInputName); 
+                                    }
+                    
                     ScheduleAssist.changeUserLoggedIn(userInputName);
                     noMatchingFound = false;
                     break;
@@ -49,7 +56,15 @@ public boolean userDBGet (String userInputName, String userInputPassword) {
 
                             }
                    if (noMatchingFound) {
-                    try { throw new Exception("Username and Password did not match. Please re-enter Username and Password."); }
+                    try { 
+                                if (Locale.getDefault().equals(ScheduleAssist.getAmericanEnglishLocale())) {
+                                    throw new Exception("Username and Password did not match. Please re-enter Username and Password.");
+                                    }
+                                else {
+                                       throw new Exception("El nombre de usuario y la contraseña no coinciden. Vuelva a introducir el nombre de usuario y la contraseña."); 
+                                    }
+
+                    }
                     catch (Exception ex){System.out.println(ex);}
                     return false;
                     

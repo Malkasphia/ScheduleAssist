@@ -1,11 +1,4 @@
-/*
- To-Do List
-1. Write a reminder check after user logs in that queries for all appointments and then checks if they are 15 minutes or less from NOW. Prints a reminder of appointment if true.
-2. Implement in ScheduleAssist the ability to generate the following reports - number of appointment types by month, schedule for each consultant, one additional report of choice
-3. Record user log-in timestamps on a log file.
-4. Use locale object to support Spanish and translate log-in messages ( and errors) to Spanish. 
-5. Generate readme document for evaluator to prove each part of the rubric has been fulfilled and how to use any specific parts.
- */
+
 
 package sa.main;
 
@@ -24,16 +17,11 @@ import static sa.main.db.DBExceptions.isInvalidData;
 
 /**
  *
- * @author Mal
+ * @author Kyle Nyce
  */
 
 public class ScheduleAssist {
 
-    /**
-     * @param args the command line arguments
-     */
-    
-    
     static Scanner scanner = new Scanner(System.in);
     static String userLoggedIn = "Not Logged In";
     static DBLogin connect = new DBLogin();
@@ -42,30 +30,66 @@ public class ScheduleAssist {
     static DBScheduler scheduler = new DBScheduler();
     static DBExceptions exception = new DBExceptions();
     static DBReports reporter = new DBReports();
-    
-    
+    static Locale spain = new Locale("es", "es-es");
+    static Locale americanEnglish = new Locale("en", "en-us");
+
     public static void main(String[] args) {
         //Initialize objects for logging into database, insertion, updating, scheduler, and scanner to use new lines as delimiter.
         scanner.useDelimiter("\\n");
+
+        /* Set Locale Object Here - Languages supported are English US and Spain Spanish. Default is American English. 
+        Comment US Locale and uncomment Spain Spanish Locale to get Spanish localization. */
+        //American English Localization Below
+        Locale.setDefault(new Locale("en", "en-us"));
+        //Spain Spanish Localization Below
+        //Locale.setDefault(new Locale("es", "es-es"));
+
+        
+        
+        
+
         //Username Login Process
-        System.out.println("Welcome to Schedule Assist V 1.0");
+
+        if (Locale.getDefault().equals(americanEnglish)) {
+           System.out.println("Welcome to Schedule Assist Version 1.0"); 
+        }
+        else {
+           System.out.println("Bienvenido a Schedule Assist Versión 1.0"); 
+        }
+        
+
+        System.out.println("Welcome to Schedule Assist V 0.1");
+
         ScheduleAssist.startLogin(connect);
         appointmentReminder();
-        DBLogger.recordUserLogin();
         printChoicesforUserInterface();
+        
         int userChoiceInput = Integer.parseInt(scanner.next());
+        
+            
+        
         ScheduleAssist.userInterface(userChoiceInput,inserter,updater,scheduler);
+ 
     }
     
 
     
     private static void startLogin (DBLogin dataBaseQueried) {
         //User enters Username
-        
-        System.out.println("Please enter user login name");
+        if (Locale.getDefault().equals(americanEnglish)) {
+           System.out.println("Please enter user login name."); 
+        }
+        else {
+           System.out.println("Por favor ingrese el nombre de usuario"); 
+        }
         String userLoginName = scanner.nextLine();
         //User enters Password
-        System.out.println("Please enter user password");
+        if (Locale.getDefault().equals(americanEnglish)) {
+           System.out.println("Please enter user password."); 
+        }
+        else {
+           System.out.println("Por favor ingrese la contraseña de usuario."); 
+        }
         String userPassword = scanner.next();
         
         /*Check Database for User Login. This is done by DBLogin returning the information and checking for a match against the 
@@ -73,9 +97,20 @@ public class ScheduleAssist {
         
         boolean restartCheck = dataBaseQueried.userDBGet(userLoginName, userPassword);
             while (!restartCheck) {
-            System.out.println("Please enter user login name");
+                
+            if (Locale.getDefault().equals(americanEnglish)) {
+           System.out.println("Please enter user login name."); 
+            }
+            else {
+           System.out.println("Por favor ingrese el nombre de usuario"); 
+            }
             userLoginName = scanner.next();
-            System.out.println("Please enter user password");
+            if (Locale.getDefault().equals(americanEnglish)) {
+           System.out.println("Please enter user password."); 
+            }
+           else {
+           System.out.println("Por favor ingrese la contraseña de usuario."); 
+            }
             userPassword = scanner.next();
             restartCheck = dataBaseQueried.userDBGet(userLoginName, userPassword);
             }
@@ -84,7 +119,7 @@ public class ScheduleAssist {
     
     /*
         Using a Switch statement, allow user to select an action to "View" appointments or customers, "Create" appointments or customers,
-         "Delete" appointments or customers, or exit the program. The functions called are Lambda expressions. 
+         "Delete" appointments or customers. The functions called are Lambda expressions. 
         */
         //Insert Code for this
         
@@ -154,6 +189,10 @@ public static String getUserLoggedIn () {
 
 public static Scanner getScanner () {
     return scanner;
+}
+
+public static Locale getAmericanEnglishLocale () {
+    return americanEnglish;
 }
 
 public static void printChoicesforUserInterface () {
@@ -239,7 +278,7 @@ private static void appointmentReminder () {
                                  System.out.println("You have an appointment coming up within the next 15 minutes - " + "Appointment Title - " + retrievedTitle + "Appointment Date -" + retrievedappointmentStart );   
                                 }
                                 else {
-                                     System.out.println ("No upcoming appointments found");
+                                     System.out.println ("No upcoming appointments found.");
                                 }
                                 }
                             }

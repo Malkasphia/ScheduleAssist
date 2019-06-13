@@ -62,9 +62,32 @@ public class DBInserter {
         
         
 }
-    //method for inserting appointments into database. Uses Scheduler interface for lambda expressions.
-    public void appointmentInsert () {
+    //method for inserting addresses into database.
+    
+    public static void addressInsert () {
         
+        String insertSQL = "INSERT INTO address"
+                            + "(address,address2,cityId,postalCode,phone,createDate,createdBy,lastUpdateBy)VALUES"
+                            + "(?,?,?,?,?,?,?,?)";
+        
+        
+        
+        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL)) {
+            stmt.setString(1, customerName);
+            stmt.setInt(2, addressId);
+            stmt.setShort(3,active);
+            stmt.setTimestamp(4,getCurrentTimeStamp());
+            stmt.setString(5, ScheduleAssist.getUserLoggedIn());
+            stmt.setString(6, ScheduleAssist.getUserLoggedIn());
+            stmt.setString(7, ScheduleAssist.getUserLoggedIn());
+            stmt.setString(8, ScheduleAssist.getUserLoggedIn());
+            
+            int recordsEffected = stmt.executeUpdate();
+            System.out.println ("Number of Rows Effected " + recordsEffected + " " + customerName + " " +  addressId +  " " + active + " " +  getCurrentTimeStamp());
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
  
 

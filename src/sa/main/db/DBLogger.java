@@ -19,7 +19,7 @@ import sa.main.ScheduleAssist;
 
 /**
  *
- * @author Mal
+ * @author Kyle Nyce
  */
 
 public class DBLogger {

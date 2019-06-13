@@ -7,7 +7,7 @@ package sa.main.db;
 
 /**
  *
- * @author Mal
+ * @author Kyle Nyce
  */
 
 public class DBExceptions {
@@ -25,6 +25,7 @@ public class DBExceptions {
     public static String isEmptyDetected () 
     {return isEmpty;} 
     
+    // Lambda Expression allows for code to be compact by storing exception error messages to be reused where needed in the whole program.
     public static boolean checkForSpacesAndEmpty (String stringToCheck) {
                         if (stringToCheck.contains(" "))
                     {

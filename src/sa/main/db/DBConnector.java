@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 /**
  *
- * @author Mal
+ * @author Kyle Nyce
  */
 // Allows the connection of all DB modules to an SQL database. Its only method startConnecting returns a conn for use in JDBC interactions.
 public class DBConnector {

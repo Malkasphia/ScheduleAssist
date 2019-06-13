@@ -14,8 +14,10 @@ import sa.main.ScheduleAssist;
 
 /**
  *
- * @author Mal
+ * @author Kyle Nyce
  */
+
+
 public class DBUpdater {
     // DBUpdater allows the updating of customer records.
     //Class Members
@@ -57,6 +59,7 @@ public class DBUpdater {
                 System.out.println("1. Customer Name");
                 System.out.println("2. Address ID");
                 System.out.println("3. Active Status (0 is not active, 1 is active.)");
+                System.out.println("4. Delete Customer");
                 // Setup Switch statement to alter variables and update customer
                 switch (Integer.parseInt(ScheduleAssist.getScanner().next())) {
            // Updates doesNameNeedUpdated to true, updates customer table with new customer name and latest update and user who updated it. Changes doesNameNeedUpdated to false to reset.
@@ -97,12 +100,29 @@ public class DBUpdater {
                DBUpdater.doesStatusNeedUpdated = true;
                changeCustomerRecord();
                DBUpdater.doesStatusNeedUpdated = false;
-               break;   
+               break;
+               case 4:
+                   deleteCustomer();
                 }
         } catch (SQLException ex) {
             Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
 }
+             private void deleteCustomer () {
+        try {
+            String updateSQLString = "DELETE FROM customer WHERE customerId = ? ";
+            try (PreparedStatement stmtUpdate = DBConnector.startConnecting().prepareStatement(updateSQLString)) {
+            stmtUpdate.setInt(1, DBUpdater.idToBeUpdated);
+            int recordsEffected = stmtUpdate.executeUpdate();
+            System.out.println ("Deleted Customer" +" " + recordsEffected +" Customer " + DBUpdater.idToBeUpdated+" " + DBInserter.getCurrentTimeStamp());
+            }    
+        } catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        }
+        
+        
         // Uses doesNameNeedUpdated, doesAddressIdNeedUpdated, and doesStatusNeedUpdated booleans to determine which SQL query to run and update to perform.
         private void changeCustomerRecord () {
         if (DBUpdater.doesNameNeedUpdated) {

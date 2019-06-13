@@ -18,7 +18,7 @@ import sa.main.ScheduleAssist;
 
 /**
  *
- * @author Mal
+ * @author Kyle Nyce
  */
 
     @FunctionalInterface
@@ -61,22 +61,9 @@ public class DBScheduler {
     private static boolean doesDateNeedUpdated = false;
 
     
-            
-    //Class Methods
-    
-    
-    // schedule calls scheduling. This is used for satisfying lambda requirement.
-    // Try statement connecting to database and getting resultSet
-    // Ask for customerId for appointment
-    // Store customerId in DBScheduler field idEntered
-    /*
-    Insert statement that inserts customerId, asks for title, description, location,contact number, inserts default url, asks for 
-    start datetime, end datetime. Inserts createDate datetime, createBy, lastUpdate timestamp, lastupdateBy automatically.
-    */
-    // Confirm appointment creation and print out values for appointment
-
-    
-    // Lambda operation for using entry of appointment into database.
+           
+    // Lambda Expression allows other classes to call on a public facing method which in turn calls on a private function that hides members of DBScheduler. This makes program more
+    //efficient by allowing redesign of private function that does not affect public function that is available to other classes.
     public void entrySchedule () {
      schedulerObj = () -> {
          scheduling();
@@ -428,6 +415,7 @@ public class DBScheduler {
                 System.out.println("2. Appointment Description");
                 System.out.println("3. Appointment Contact.");
                 System.out.println("4. Appointment Date.");
+                System.out.println("5. Delete Appointment.");
                 // Setup Switch statement to alter variables and update customer
                 switch (Integer.parseInt(ScheduleAssist.getScanner().next())) {
                 // Updates doesTitleNeedUpdated to true, updates appointment table with new appointment title ,latest update timestamp, and user who updated it. Changes doesTitleNeedUpdated to false to reset.
@@ -474,7 +462,11 @@ public class DBScheduler {
                         DBScheduler.doesDateNeedUpdated = true;
                         changeAppointmentRecord();
                         DBScheduler.doesDateNeedUpdated = false;
-                        break;    
+                        break;
+                    case 5:
+                        deleteAppointment();
+                        break;
+                        
                         
                     
                     
@@ -567,6 +559,20 @@ public class DBScheduler {
        
        
    }
+   //Delete Appointment Record
+     private void deleteAppointment () {
+        try {
+            String updateSQLString = "DELETE FROM appointment WHERE appointmentId = ? ";
+            try (PreparedStatement stmtUpdate = DBConnector.startConnecting().prepareStatement(updateSQLString)) {
+            stmtUpdate.setInt(1, DBScheduler.idEntered);
+            int recordsEffected = stmtUpdate.executeUpdate();
+            System.out.println ("Deleted Appointment" +" " + recordsEffected +" Appointment " + DBScheduler.idEntered +" " + DBInserter.getCurrentTimeStamp());
+            }    
+        } catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        }
    
    // Provide the ability to view the calendar by month and by week.
    public void viewWeek () {
