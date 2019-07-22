@@ -374,7 +374,7 @@ public class DBScheduler {
     
     
     // Used to convert ZoneDateTime to Timestamp
-    private static Timestamp toTimestamp(ZonedDateTime dateTime) {
+    public static Timestamp toTimestamp(ZonedDateTime dateTime) {
     return new Timestamp(dateTime.toInstant().getEpochSecond() * 1000L);
   }
 
