@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,8 +29,8 @@ public class DBLogger {
     
     public static void recordUserLogin () {
     String userLogged = ScheduleAssist.getUserLoggedIn();
-    LocalDate currentDay = LocalDate.now();
-    String loggerFileAppendDate = currentDay.toString();
+        Timestamp currentTimeStamp = DBInserter.getCurrentTimeStamp();
+    String loggerFileAppendDate = currentTimeStamp.toString();
     File userLoginFile = new File ("userLoginFile.txt");
         try {    
             if(userLoginFile.createNewFile()){ 

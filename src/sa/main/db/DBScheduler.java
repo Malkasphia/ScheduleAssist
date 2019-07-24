@@ -331,6 +331,7 @@ public class DBScheduler {
         DBScheduler.timezone = timezone.systemDefault();
         ZonedDateTime returnZoneDateTime = ZonedDateTime.of(DBScheduler.year,DBScheduler.month,DBScheduler.dayOfMonth,DBScheduler.hour,DBScheduler.minute,second,
                 nanoOfSecond, timezone);
+                    
         Timestamp comparedDay = toTimestamp(returnZoneDateTime);
                         // Check for overlapping appointments and throw an exception if there is one.
                         // Get all appointments of the day
@@ -367,7 +368,9 @@ public class DBScheduler {
                             catch (SQLException ex) {
                                     Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
                                     }
-         return returnZoneDateTime;              
+                            //convert to UTC before returning
+                            ZonedDateTime ConvertedZoneDateTime = returnZoneDateTime.withZoneSameInstant(ZoneId.of("Z"));
+         return ConvertedZoneDateTime;              
         }
         
     }

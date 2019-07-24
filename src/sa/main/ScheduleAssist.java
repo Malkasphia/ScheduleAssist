@@ -59,6 +59,7 @@ public class ScheduleAssist {
         
 
         System.out.println("Welcome to Schedule Assist V 0.1");
+        
 
         ScheduleAssist.startLogin(connect);
         appointmentReminder();
@@ -196,6 +197,7 @@ public static Locale getAmericanEnglishLocale () {
 }
 
 public static void printChoicesforUserInterface () {
+    DBLogger.recordUserLogin();
     System.out.println(userLoggedIn + ", please enter a number to the corresponding action you wish to complete.");
     System.out.println("1. Create New Customer Record ");
     System.out.println("2. Update a Customer Record ");
