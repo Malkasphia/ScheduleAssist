@@ -75,7 +75,7 @@ public class DBExceptions {
                    
 }
     //Checks that phone number only contains numbers. Then checks that the phone number is 10 characters long.
-    public static void checkPhoneNumber (String phoneNumber) {
+    public static boolean checkPhoneNumber (String phoneNumber) {
         if (!phoneNumber.matches("^[0-9]+$")) 
         {
                     try 
@@ -88,6 +88,7 @@ public class DBExceptions {
                         catch (Exception ex) 
                         {
                             System.out.println (ex);
+                            return true;
                         }
         }
         
@@ -103,8 +104,10 @@ public class DBExceptions {
                         catch (Exception ex) 
                         {
                             System.out.println (ex);
+                            return true;
                         }
         }
+        return false;
     }
             
     

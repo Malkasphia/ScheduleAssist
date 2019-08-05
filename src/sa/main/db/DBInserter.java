@@ -96,10 +96,17 @@ public class DBInserter {
                  if (DBExceptions.checkForSpacesAndEmpty(postalCode)) {
                      return;
                  }
-            System.out.println ("Please enter the phone number of the Customer's address. May not contain a space or be blank.");     
+            System.out.println ("Please enter the phone number of the Customer's address. May not contain non-numeric characters or spaces or be longer than 10 digits.");     
             String phone = ScheduleAssist.getScanner().next();
                  if (DBExceptions.checkForSpacesAndEmpty(phone)) {
                      return;
+                 }
+                 if (DBExceptions.checkPhoneNumber(phone)) {
+                     addressInsert();
+                     return;
+                 }
+                 else {
+                     
                  }
             
             
