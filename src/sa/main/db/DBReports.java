@@ -40,12 +40,13 @@ public class DBReports {
                                                      
       try {
                         
-                            String selectSQL = "SELECT COUNT(DISTINCT title) AS total FROM appointment WHERE start LIKE '2019-"+MonthOfAppointment+"%'";
+                            String selectSQL = "SELECT DISTINCT title, COUNT(title) as total FROM appointment WHERE start LIKE '2019-"+MonthOfAppointment+"%' GROUP BY title";
                             try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
                                 ResultSet rs = stmt.executeQuery(selectSQL);
                                 while (rs.next()) {
+                                String retrievedTitle = rs.getString("title");
                                 retrievedCount = rs.getInt("total");
-                                System.out.println ("Number of Appointments for " + "2019 - " + monthOfYearSQL + " "+ retrievedCount);  
+                                System.out.println ("Number of Appointments for " + MonthOfAppointment + " 2019 - " + retrievedTitle +  " "+ retrievedCount);  
                                 
                                 }
                                 
