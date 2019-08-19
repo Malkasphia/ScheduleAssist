@@ -62,15 +62,12 @@ public class ScheduleAssist {
         
 
         ScheduleAssist.startLogin(connect);
+        while ( 1 == 1) {
         appointmentReminder();
         printChoicesforUserInterface();
-        
         int userChoiceInput = Integer.parseInt(scanner.next());
-        
-            
-        
         ScheduleAssist.userInterface(userChoiceInput,inserter,updater,scheduler);
- 
+        }
     }
     
 
@@ -128,8 +125,11 @@ public class ScheduleAssist {
           in which case a confirm action is asked. */
         //Insert Code for this.
     
-    //REWRITE THIS METHOD AND MAKE IT EASIER TO USE AND ISOLATED
+
     private static void userInterface (int userChoice, DBInserter DBInserterObject, DBUpdater DBUpdaterObject, DBScheduler DBSchedulerObject ) {
+    
+        
+           
         
        switch (userChoice) {
            
@@ -173,10 +173,15 @@ public class ScheduleAssist {
            case 9:
                DBReports.allCustomersReport();
                break;
+           case 10:
+               System.out.println("Thank you for using Schedule Assist, " + userLoggedIn);
+               System.exit(0);
+               break;
                
        }
         
     }
+    
     
 public static void changeUserLoggedIn (String user) {
     userLoggedIn = user;
@@ -197,7 +202,6 @@ public static Locale getAmericanEnglishLocale () {
 }
 
 public static void printChoicesforUserInterface () {
-    DBLogger.recordUserLogin();
     System.out.println(userLoggedIn + ", please enter a number to the corresponding action you wish to complete.");
     System.out.println("1. Create New Customer Record ");
     System.out.println("2. Update a Customer Record ");
@@ -208,6 +212,7 @@ public static void printChoicesforUserInterface () {
     System.out.println("7. View report for number of appointment types by month.");
     System.out.println("8. View report for today's appointments for each Consultant.");
     System.out.println("9. View report of all customers.");
+    System.out.println("10. Exit Program");
 }
 
 public static void checkForSpacesAndEmptyForUI (String stringToCheck) {
