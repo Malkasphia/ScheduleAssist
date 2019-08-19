@@ -644,7 +644,10 @@ public class DBScheduler {
                 String retrievedappointmentId = rs.getString("appointmentId");
                 String retrievedTitle = rs.getString("title");
                 Timestamp retrievedStartDate = rs.getTimestamp("start");
-                System.out.println("Appointment ID - " + retrievedappointmentId + " Appointment Title - " + retrievedTitle + "Start Date - " + retrievedStartDate );
+                // Update retrievedStartDate to be a zonedDateTime instant
+               ZonedDateTime zdt= ZonedDateTime.ofInstant(retrievedStartDate.toInstant(),ZonedDateTime.now().getZone());
+               ZonedDateTime ConvertedZoneDateTime = zdt.withZoneSameInstant(ZoneId.of("Z"));
+                System.out.println("Appointment ID - " + retrievedappointmentId + " Appointment Title - " + retrievedTitle + "Start Date - " + ConvertedZoneDateTime );
 
             }
             
