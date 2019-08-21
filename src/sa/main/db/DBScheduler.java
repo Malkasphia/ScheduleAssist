@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.logging.Level;
@@ -233,7 +234,9 @@ public class DBScheduler {
                     DBScheduler.timezone = timezone.systemDefault();
         ZonedDateTime returnZoneDateTime = ZonedDateTime.of(DBScheduler.year,DBScheduler.month,DBScheduler.dayOfMonth,DBScheduler.hour,DBScheduler.minute,second,
                 nanoOfSecond, timezone);
-        Timestamp comparedDay = toTimestamp(returnZoneDateTime);
+        ZonedDateTime zdtime= returnZoneDateTime.withZoneSameInstant(ZoneId.of("Z"));
+                
+        Timestamp comparedDay = toTimestamp(zdtime);
                         // Check for overlapping appointments and throw an exception if there is one.
                         // Get all appointments of the day
                         // compare DBscheduler.hour with appointment considering the hour
@@ -644,10 +647,13 @@ public class DBScheduler {
                 String retrievedappointmentId = rs.getString("appointmentId");
                 String retrievedTitle = rs.getString("title");
                 Timestamp retrievedStartDate = rs.getTimestamp("start");
-                // Update retrievedStartDate to be a zonedDateTime instant
-               ZonedDateTime zdt= ZonedDateTime.ofInstant(retrievedStartDate.toInstant(),ZonedDateTime.now().getZone());
-               ZonedDateTime ConvertedZoneDateTime = zdt.withZoneSameInstant(ZoneId.of("Z"));
-                System.out.println("Appointment ID - " + retrievedappointmentId + " Appointment Title - " + retrievedTitle + "Start Date - " + ConvertedZoneDateTime );
+                // Update retrievedStartDate to be a a non-zoned timestamp then 
+               
+               ZonedDateTime zdt= ZonedDateTime.ofInstant(retrievedStartDate.toInstant(), ZoneId.of("Z"));
+               //LocalDateTime ldt = zdt.toLocalDateTime();
+               ZonedDateTime ConvertedZoneDateTime = zdt.withZoneSameLocal(ZonedDateTime.now().getZone());
+               
+                System.out.println("Appointment ID - " + retrievedappointmentId + " Appointment Type - " + retrievedTitle + "Start Date - " + ConvertedZoneDateTime );
 
             }
             

@@ -63,10 +63,27 @@ public class ScheduleAssist {
 
         ScheduleAssist.startLogin(connect);
         while ( 1 == 1) {
-        appointmentReminder();
-        printChoicesforUserInterface();
-        int userChoiceInput = Integer.parseInt(scanner.next());
-        ScheduleAssist.userInterface(userChoiceInput,inserter,updater,scheduler);
+            try {
+        System.out.println("Do you wish to continue using this program? Enter 1 for yes. Enter 2 to exit. ");
+        int userChoiceInputContinue = Integer.parseInt(scanner.next()); 
+        switch (userChoiceInputContinue) {
+            case 1:
+                    appointmentReminder();
+                    printChoicesforUserInterface();
+                    int userChoiceInput = Integer.parseInt(scanner.next());
+                    ScheduleAssist.userInterface(userChoiceInput,inserter,updater,scheduler);
+                    break;
+            case 2: System.exit(0);
+            break;
+        }
+            }
+            
+            
+        catch (Exception ex) {
+            System.out.println("You did not enter any of the correct options. Please re-enter a valid option. ");
+            
+        }
+
         }
     }
     

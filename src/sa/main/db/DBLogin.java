@@ -43,14 +43,16 @@ public boolean userDBGet (String userInputName, String userInputPassword) {
                 if (userName.equals(userInputName) & userPassword.equals(userInputPassword)) {
                                     if (Locale.getDefault().equals(ScheduleAssist.getAmericanEnglishLocale())){
                                         System.out.println("Welcome" + " " + userInputName);
+                                        ScheduleAssist.changeUserLoggedIn(userInputName);
                                         DBLogger.recordUserLogin();
                                     }
                                     else {
                                    System.out.println("Bienvenido" + " " + userInputName); 
+                                        ScheduleAssist.changeUserLoggedIn(userInputName);
                                         DBLogger.recordUserLogin();
                                     }
                     
-                    ScheduleAssist.changeUserLoggedIn(userInputName);
+                    
                     noMatchingFound = false;
                     break;
                 }
