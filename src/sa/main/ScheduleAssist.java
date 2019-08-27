@@ -62,10 +62,12 @@ public class ScheduleAssist {
         
 
         ScheduleAssist.startLogin(connect);
+        int restartLoop = 0;
         while ( 1 == 1) {
             try {
-        System.out.println("Do you wish to continue using this program? Enter 1 for yes. Enter 2 to exit. ");
-        int userChoiceInputContinue = Integer.parseInt(scanner.next()); 
+                if (restartLoop == 1) {
+                    System.out.println("Do you wish to continue using this program? Enter 1 for yes. Enter 2 to exit. "); 
+                    int userChoiceInputContinue = Integer.parseInt(scanner.next()); 
         switch (userChoiceInputContinue) {
             case 1:
                     appointmentReminder();
@@ -73,9 +75,21 @@ public class ScheduleAssist {
                     int userChoiceInput = Integer.parseInt(scanner.next());
                     ScheduleAssist.userInterface(userChoiceInput,inserter,updater,scheduler);
                     break;
-            case 2: System.exit(0);
-            break;
-        }
+            case 2: 
+                    System.out.println("Thank you for using Schedule Assist, " + userLoggedIn);
+                    System.exit(0);
+                    break;
+                                        }
+                                    }
+                else {
+                    appointmentReminder();
+                    printChoicesforUserInterface();
+                    int userChoiceInput = Integer.parseInt(scanner.next());
+                    ScheduleAssist.userInterface(userChoiceInput,inserter,updater,scheduler);
+                }
+                
+                restartLoop = 1;
+        
             }
             
             

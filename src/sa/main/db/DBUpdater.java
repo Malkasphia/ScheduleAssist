@@ -85,6 +85,8 @@ public class DBUpdater {
                System.out.println("3. City ID.");
                System.out.println("4. Postal Code.");
                System.out.println("5. Phone.");
+               System.out.println("6. City ");
+               System.out.println("7. Country.");
                switch (Integer.parseInt(ScheduleAssist.getScanner().next())) { 
                    case 1: System.out.println ("Please enter the street address without apartment number. May not contain a space or be blank.");
                            String address = ScheduleAssist.getScanner().next();
@@ -127,6 +129,26 @@ public class DBUpdater {
                           StringAddressInsert(phone,option5);
                           
                       return;
+                  case 6: System.out.println ("Please enter the city of the Customer's address. May not contain a space or be blank..");     
+                          String city = ScheduleAssist.getScanner().next();
+                          while (DBExceptions.checkForSpacesAndEmpty(city)) {
+                            city = ScheduleAssist.getScanner().next();
+                            
+                            }
+                          int option6 = 6;
+                          StringAddressInsert(city,option6);
+                          
+                      return;
+                  case 7: System.out.println ("Please enter the country of the Customer's address. May not contain a space or be blank..");     
+                          String country = ScheduleAssist.getScanner().next();
+                          while (DBExceptions.checkForSpacesAndEmpty(country)) {
+                            country = ScheduleAssist.getScanner().next();
+                            
+                            }
+                          int option7 = 7;
+                          StringAddressInsert(country,option7);
+                          
+                      return;     
                        
                }
                String checkAddressID = ScheduleAssist.getScanner().next();

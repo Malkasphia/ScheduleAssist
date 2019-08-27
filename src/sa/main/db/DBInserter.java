@@ -28,6 +28,8 @@ public class DBInserter {
     //Statement stmt = conn.createStatement();
 //Class Members
     private static DBConnector Connector;
+    private static int cityIDInserted;
+    private static int countryIDInserted;
 
 
 //Class Methods
@@ -57,6 +59,8 @@ public class DBInserter {
             int recordsEffected = stmt.executeUpdate();
             System.out.println ("Number of Rows Effected " + recordsEffected + " " + customerName + " " +  addressId +  " " + active + " " +  getCurrentTimeStamp());
             addressInsert();
+            cityInsert();
+            countryInsert();
             
         } catch (SQLException ex) {
             Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -86,11 +90,15 @@ public class DBInserter {
                  if (DBExceptions.checkForSpacesAndEmpty(address2)) {
                      return;
                  }
-            System.out.println ("Please enter the city ID of the Customer. May not contain a space or be blank.");     
+            System.out.println ("Please enter the city ID of the Customer, may only be a number. May not contain a space or be blank.");     
             int cityId = Integer.parseInt(ScheduleAssist.getScanner().next());
                  if (DBExceptions.checkForSpacesAndEmpty(Integer.toString(cityId))) {
                      return;
                  }
+                 if (DBExceptions.checkIDNumber(Integer.toString(cityId))) {
+                     return;
+                 }
+                 cityIDInserted = cityId;
             System.out.println ("Please enter the postal code of the Customer. May not contain a space or be blank.");     
             String postalCode = ScheduleAssist.getScanner().next();
                  if (DBExceptions.checkForSpacesAndEmpty(postalCode)) {
@@ -127,6 +135,73 @@ public class DBInserter {
         }
     }
     
+    public static void cityInsert () { 
+        String insertSQL = "INSERT INTO city"
+                            + "(cityId,city,countryId,createDate,createdBy,lastUpdateBy)VALUES"
+                            + "(?,?,?,?,?,?)";
+        
+        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL)) {
+            System.out.println ("Please enter the city of the address. May not contain a space or be blank.");
+            String city = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(city)) {
+                     return;
+                 }
+            System.out.println ("Please enter the country ID of the city. May not contain a space or be blank.");     
+            int countryId = Integer.parseInt(ScheduleAssist.getScanner().next());
+                 if (DBExceptions.checkForSpacesAndEmpty(Integer.toString(countryId))) {
+                     return;
+                 }
+                 if (DBExceptions.checkIDNumber(Integer.toString(countryId))) {
+                     return;
+                 }
+                 countryIDInserted = countryId;
+
+            stmt.setInt(1, cityIDInserted);
+            stmt.setString(2, city);
+            stmt.setInt(3,countryIDInserted);
+            stmt.setTimestamp(4, toTimestamp(ZonedDateTime.now()));
+            stmt.setString(5, ScheduleAssist.getUserLoggedIn());
+            stmt.setString(6, ScheduleAssist.getUserLoggedIn());
+            
+            int recordsEffected = stmt.executeUpdate();
+            System.out.println ("Number of Rows Effected " + recordsEffected + " Name of City " + city + " Country ID -  " +  countryIDInserted +  " CityID " + cityIDInserted + " " +  toTimestamp(ZonedDateTime.now()) );
+
+    }
+        catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public static void countryInsert () { 
+        String insertSQL = "INSERT INTO country"
+                            + "(countryId,country,createDate,createdBy,lastUpdateBy)VALUES"
+                            + "(?,?,?,?,?)";
+        
+        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL)) {
+            System.out.println ("Please enter the country of the address. May not contain a space or be blank.");
+            String country = ScheduleAssist.getScanner().next();
+                 if (DBExceptions.checkForSpacesAndEmpty(country)) {
+                     return;
+                 }
+
+
+            stmt.setInt(1, countryIDInserted);
+            stmt.setString(2, country);
+            stmt.setTimestamp(3, toTimestamp(ZonedDateTime.now()));
+            stmt.setString(4, ScheduleAssist.getUserLoggedIn());
+            stmt.setString(5, ScheduleAssist.getUserLoggedIn());
+            
+            int recordsEffected = stmt.executeUpdate();
+            System.out.println ("Number of Rows Effected " + recordsEffected + " Name of Country " + country + " Country ID -  " +  countryIDInserted + " " + toTimestamp(ZonedDateTime.now()) );
+
+    }
+        catch (SQLException ex) {
+            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
      public static void StringAddressInsert (String stringAddressToBeInserted, int option) {
          switch (option) {
              case 1: String insertSQL1 = "UPDATE address SET address = ? , lastUpdate = ? , lastUpdateBy = ?";
@@ -135,7 +210,7 @@ public class DBInserter {
                             stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
                             stmt.setString(3, ScheduleAssist.getUserLoggedIn());
                             int recordsEffected = stmt.executeUpdate();
-                            System.out.println ("Number of Rows Effected " + recordsEffected + " " + stringAddressToBeInserted);
+                            System.out.println ("Number of Rows Effected " + recordsEffected + " Address updated to " + stringAddressToBeInserted);
                             }
                         catch (SQLException ex) {
                         Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -147,7 +222,7 @@ public class DBInserter {
                             stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
                             stmt.setString(3, ScheduleAssist.getUserLoggedIn());
                             int recordsEffected = stmt.executeUpdate();
-                            System.out.println ("Number of Rows Effected " + recordsEffected + " " + stringAddressToBeInserted);
+                            System.out.println ("Number of Rows Effected " + recordsEffected + " Apartment or Suite updated to " + stringAddressToBeInserted);
                             }
                         catch (SQLException ex) {
                         Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,7 +234,7 @@ public class DBInserter {
                             stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
                             stmt.setString(3, ScheduleAssist.getUserLoggedIn());
                             int recordsEffected = stmt.executeUpdate();
-                            System.out.println ("Number of Rows Effected " + recordsEffected + " " + stringAddressToBeInserted);
+                            System.out.println ("Number of Rows Effected " + recordsEffected + " Postal Code updated to " + stringAddressToBeInserted);
                             }
                         catch (SQLException ex) {
                         Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -171,7 +246,31 @@ public class DBInserter {
                             stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
                             stmt.setString(3, ScheduleAssist.getUserLoggedIn());
                             int recordsEffected = stmt.executeUpdate();
-                            System.out.println ("Number of Rows Effected " + recordsEffected + " " + stringAddressToBeInserted);
+                            System.out.println ("Number of Rows Effected " + recordsEffected + " Phone number updated to " + stringAddressToBeInserted);
+                            }
+                        catch (SQLException ex) {
+                        Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                 break;
+             case 6: String insertSQL6 = "UPDATE city SET city = ? , lastUpdate = ? , lastUpdateBy = ?";
+                        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL6)) { 
+                            stmt.setString(1, stringAddressToBeInserted);
+                            stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
+                            stmt.setString(3, ScheduleAssist.getUserLoggedIn());
+                            int recordsEffected = stmt.executeUpdate();
+                            System.out.println ("Number of Rows Effected " + recordsEffected + " City updated to  " + stringAddressToBeInserted);
+                            }
+                        catch (SQLException ex) {
+                        Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                 break;
+             case 7: String insertSQL7 = "UPDATE country SET country = ? , lastUpdate = ? , lastUpdateBy = ? ";
+                        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL7)) { 
+                            stmt.setString(1, stringAddressToBeInserted);
+                            stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
+                            stmt.setString(3, ScheduleAssist.getUserLoggedIn());
+                            int recordsEffected = stmt.executeUpdate();
+                            System.out.println ("Number of Rows Effected " + recordsEffected + " Country updated to " + stringAddressToBeInserted);
                             }
                         catch (SQLException ex) {
                         Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);

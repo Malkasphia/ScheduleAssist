@@ -648,12 +648,17 @@ public class DBScheduler {
                 String retrievedTitle = rs.getString("title");
                 Timestamp retrievedStartDate = rs.getTimestamp("start");
                 // Update retrievedStartDate to be a a non-zoned timestamp then 
+               ZonedDateTime zdtUTC= ZonedDateTime.ofInstant(retrievedStartDate.toInstant(), ZoneId.of("Z"));
                
-               ZonedDateTime zdt= ZonedDateTime.ofInstant(retrievedStartDate.toInstant(), ZoneId.of("Z"));
-               //LocalDateTime ldt = zdt.toLocalDateTime();
+               ZonedDateTime zdt= ZonedDateTime.ofInstant(retrievedStartDate.toInstant(), ZonedDateTime.now().getZone());
+               ZonedDateTime ConvertedZoneDateTimeUTC = zdtUTC.withZoneSameLocal(ZonedDateTime.now().getZone());
+               
                ZonedDateTime ConvertedZoneDateTime = zdt.withZoneSameLocal(ZonedDateTime.now().getZone());
+               LocalDateTime ldt = ConvertedZoneDateTime.toLocalDateTime();
                
-                System.out.println("Appointment ID - " + retrievedappointmentId + " Appointment Type - " + retrievedTitle + "Start Date - " + ConvertedZoneDateTime );
+                System.out.println("Appointment ID - " + retrievedappointmentId + " Appointment Type - " + retrievedTitle );
+                System.out.println(" Original Appointment Date - " + ldt);
+                System.out.println(" Appointment Start Date Modified by your Time Zone - " + ConvertedZoneDateTimeUTC);
 
             }
             

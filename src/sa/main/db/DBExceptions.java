@@ -16,6 +16,7 @@ public class DBExceptions {
     static String spaceDetected = "You have entered a space. Please re-enter data without a space.";
     static String isEmpty = "You have not entered any data. Please re-enter data.";
     static String isNotNumeric = "You have entered a non-numeric character for the phone number. Please re-enter data.";
+    static String isNotNumericID = "You have entered a non-numeric character for the ID. Please re-enter data.";
     static String isBiggerThanTenDigits = "You have entered a phone number that is larger than 10 digits. Please re-enter data.";
     
     public static String isInvalidData () 
@@ -32,6 +33,9 @@ public class DBExceptions {
     
     public static String isBiggerThanTenDigitsDetected () 
     {return isBiggerThanTenDigits;}
+    
+    public static String isNotNumericIDDetected() 
+    {return isNotNumericID;}
     
     // Lambda Expression allows for code to be compact by storing exception error messages to be reused where needed in the whole program.
     public static boolean checkForSpacesAndEmpty (String stringToCheck) {
@@ -109,9 +113,27 @@ public class DBExceptions {
         }
         return false;
     }
+    
+    public static boolean checkIDNumber (String IDNumber) {   
+    if (!IDNumber.matches("^[0-9]+$")) 
+        {
+                    try 
+                        {
+                            
+                            LambdaException LEisNotNumericIDDetected = () -> DBExceptions.isNotNumericIDDetected();
+                            String showMessage = LEisNotNumericIDDetected.errorMessage();
+                            throw new Exception(showMessage);
+                        }
+                        catch (Exception ex) 
+                        {
+                            System.out.println (ex);
+                            return true;
+                        }
+        }
+        return false;
             
     
     
-    
+    }
 }
 
