@@ -65,7 +65,6 @@ public class ScheduleAssist {
         int restartLoop = 0;
         while ( 1 == 1) {
             try {
-                if (restartLoop == 1) {
                     System.out.println("Do you wish to continue using this program? Enter 1 for yes. Enter 2 to exit. "); 
                     int userChoiceInputContinue = Integer.parseInt(scanner.next()); 
         switch (userChoiceInputContinue) {
@@ -79,27 +78,14 @@ public class ScheduleAssist {
                     System.out.println("Thank you for using Schedule Assist, " + userLoggedIn);
                     System.exit(0);
                     break;
-                                        }
-                                    }
-                else {
-                    appointmentReminder();
-                    printChoicesforUserInterface();
-                    int userChoiceInput = Integer.parseInt(scanner.next());
-                    ScheduleAssist.userInterface(userChoiceInput,inserter,updater,scheduler);
-                }
-                
-                restartLoop = 1;
-        
             }
-            
-            
+            }
         catch (Exception ex) {
-            System.out.println("You did not enter any of the correct options. Please re-enter a valid option. ");
-            
+            System.out.println("You did not enter any of the correct options. Please re-enter a valid option. ");  
         }
-
         }
     }
+    
     
 
     
@@ -169,16 +155,22 @@ public class ScheduleAssist {
                String inputCustomerName = null;
                inputCustomerName = scanner.next();
                //check customer name for containing a space   
-               checkForSpacesAndEmptyForUI(inputCustomerName);
-               System.out.println("Please enter the Address ID. May not contain spaces or be blank.");
+               while (DBExceptions.checkForSpacesAndEmpty(inputCustomerName)){
+                   inputCustomerName = scanner.next();
+               }
+               
+               /*System.out.println("Please enter the Address ID. May not contain spaces or be blank.");
                int inputAddressID = Integer.parseInt(scanner.next());
                String inputAddressIDString = Integer.toString(inputAddressID);
-               checkForSpacesAndEmptyForUI(inputAddressIDString); 
+               while (DBExceptions.checkForSpacesAndEmpty(inputAddressIDString)){
+               inputAddressID = Integer.parseInt(scanner.next());
+               inputAddressIDString = Integer.toString(inputAddressID);
+               } */
                System.out.println("Please enter the active state. Choose 1 for active. 0 for inactive. May not contain spaces or be blank.");
                short inputActive = Short.parseShort(scanner.next());
                String inputActiveString = Short.toString(inputActive);
                checkForSpacesAndEmptyForUI(inputActiveString);
-               DBInserterObject.customerInsert(inputCustomerName, inputAddressID, inputActive);
+               DBInserterObject.customerInsert(inputCustomerName, inputActive);
                break;
            case 2:
                DBUpdaterObject.databaseUpdate();

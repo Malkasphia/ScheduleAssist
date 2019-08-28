@@ -82,11 +82,9 @@ public class DBUpdater {
                System.out.println("Enter the number of the option you would like to update.");
                System.out.println("1. Street Address");
                System.out.println("2. Apartment Number or Suite.");
-               System.out.println("3. City ID.");
+               System.out.println("3. City.");
                System.out.println("4. Postal Code.");
                System.out.println("5. Phone.");
-               System.out.println("6. City ");
-               System.out.println("7. Country.");
                switch (Integer.parseInt(ScheduleAssist.getScanner().next())) { 
                    case 1: System.out.println ("Please enter the street address without apartment number. May not contain a space or be blank.");
                            String address = ScheduleAssist.getScanner().next();
@@ -104,10 +102,14 @@ public class DBUpdater {
                            int option2 = 2;
                            StringAddressInsert(address2,option2);
                        return;
-                  case 3: System.out.println ("Please enter the city ID of the Customer. May not contain a space or be blank.");     
+                  case 3: System.out.println ("Please enter the number of the city the customer lives in. May not contain a space or be blank.");
+                            System.out.println ("1. New York, United States");
+                            System.out.println ("2. San Francisco, United States");
+                            System.out.println ("3. Houston, United States");
+                            System.out.println ("4. Madrid, Spain");     
                           int cityId = Integer.parseInt(ScheduleAssist.getScanner().next());
-                          if (DBExceptions.checkForSpacesAndEmpty(Integer.toString(cityId))) {
-                          return;
+                          while(DBExceptions.checkForSpacesAndEmpty(Integer.toString(cityId))) {
+                          cityId = Integer.parseInt(ScheduleAssist.getScanner().next());
                           }
                           IntAddressInsert(cityId);
                       return;
@@ -129,18 +131,10 @@ public class DBUpdater {
                           StringAddressInsert(phone,option5);
                           
                       return;
-                      //Change to select city instead of typing a city. Get cities from a list and have user choose it, get ID of city and put that into addressID
-                  case 6: System.out.println ("Please enter the number of the city you want to change for the Customer's address. May not contain a space or be blank..");     
-                          String city = ScheduleAssist.getScanner().next();
-                          while (DBExceptions.checkForSpacesAndEmpty(city)) {
-                            city = ScheduleAssist.getScanner().next();
-                            
-                            }
-                          int option6 = 6;
-                          StringAddressInsert(city,option6);
-                          
-                      return;
-     
+                      
+                      
+                      //Get cities from a list and have user choose it, get ID of city and put that into addressID
+
                        
                }
                String checkAddressID = ScheduleAssist.getScanner().next();
@@ -241,6 +235,10 @@ public class DBUpdater {
         
         public void databaseUpdate () {
             customerUpdate ();
+        }
+        
+        public static int getCustomerID () {
+            return idToBeUpdated;
         }
         
         

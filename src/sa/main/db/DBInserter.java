@@ -30,6 +30,12 @@ public class DBInserter {
     private static DBConnector Connector;
     private static int cityIDInserted;
     private static int countryIDInserted;
+    
+    private static String customerNameInserted;
+    private static String addressInserted;
+    private static String address2Inserted;
+    private static String postalCodeInserted;
+    private static String phoneInserted;
 
 
 //Class Methods
@@ -40,27 +46,24 @@ public class DBInserter {
     a new row and documents the change in the database by the user who logged in. It uses NOW() for the createDate.
     */
     
-    public void customerInsert (String customerName, int addressId, short active ) {
-
+    public void customerInsert (String customerName, short active ) {
+        customerNameInserted = customerName;
         String insertSQL = "INSERT INTO customer"
                             + "(customerName,addressId,active,createDate,createdBy,lastUpdateBy)VALUES"
                             + "(?,?,?,?,?,?)";
-        
-        
-        
+        int addressIdInserted = 1;
         try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL)) {
             stmt.setString(1, customerName);
-            stmt.setInt(2, addressId);
+            stmt.setInt(2, addressIdInserted);
             stmt.setShort(3,active);
             stmt.setTimestamp(4,getCurrentTimeStamp());
             stmt.setString(5, ScheduleAssist.getUserLoggedIn());
             stmt.setString(6, ScheduleAssist.getUserLoggedIn());
-            
             int recordsEffected = stmt.executeUpdate();
-            System.out.println ("Number of Rows Effected " + recordsEffected + " " + customerName + " " +  addressId +  " " + active + " " +  getCurrentTimeStamp());
             addressInsert();
-            cityInsert();
-            countryInsert();
+            setAddressIDfromCustomerTable();
+            
+            
             
         } catch (SQLException ex) {
             Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -69,6 +72,18 @@ public class DBInserter {
         
         
 }
+    private static void setAddressIDfromCustomerTable () {
+            String updateSQL = " UPDATE customer SET addressId = customerId ";
+            try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(updateSQL)) { 
+                            int recordsEffected = stmt.executeUpdate();
+            }
+                        catch (SQLException ex) {
+                        Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+            
+            
+        }
     //method for inserting addresses into database.
     
     public static void addressInsert () {
@@ -82,41 +97,45 @@ public class DBInserter {
         try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL)) {
             System.out.println ("Please enter the street address without apartment number. May not contain a space or be blank.");
             String address = ScheduleAssist.getScanner().next();
-                 if (DBExceptions.checkForSpacesAndEmpty(address)) {
-                     return;
+                 while (DBExceptions.checkForSpacesAndEmpty(address)) {
+                     address = ScheduleAssist.getScanner().next();
                  }
             System.out.println ("Please enter the apartment or suite of the Customer. May not contain a space or be blank.");     
             String address2 = ScheduleAssist.getScanner().next();
-                 if (DBExceptions.checkForSpacesAndEmpty(address2)) {
-                     return;
+                 while (DBExceptions.checkForSpacesAndEmpty(address2)) {
+                     address2 = ScheduleAssist.getScanner().next();
                  }
-            System.out.println ("Please enter the city ID of the Customer, may only be a number. May not contain a space or be blank.");     
+            System.out.println ("Please enter the number of the city the customer lives in. May not contain a space or be blank.");
+            System.out.println ("1. New York, United States");
+            System.out.println ("2. San Francisco, United States");
+            System.out.println ("3. Houston, United States");
+            System.out.println ("4. Madrid, Spain");
             int cityId = Integer.parseInt(ScheduleAssist.getScanner().next());
-                 if (DBExceptions.checkForSpacesAndEmpty(Integer.toString(cityId))) {
-                     return;
+                 while (DBExceptions.checkForSpacesAndEmpty(Integer.toString(cityId))) {
+                     cityId = Integer.parseInt(ScheduleAssist.getScanner().next());
                  }
-                 if (DBExceptions.checkIDNumber(Integer.toString(cityId))) {
-                     return;
+                 while (DBExceptions.checkIDNumber(Integer.toString(cityId))) {
+                     cityId = Integer.parseInt(ScheduleAssist.getScanner().next());
+                 }
+                 while (cityId > 4 || cityId < 0) {
+                     System.out.println ("You have entered an invalid city selection. Please re-enter data.");
+                     cityId = Integer.parseInt(ScheduleAssist.getScanner().next());
                  }
                  cityIDInserted = cityId;
             System.out.println ("Please enter the postal code of the Customer. May not contain a space or be blank.");     
             String postalCode = ScheduleAssist.getScanner().next();
-                 if (DBExceptions.checkForSpacesAndEmpty(postalCode)) {
-                     return;
+                 while (DBExceptions.checkForSpacesAndEmpty(postalCode)) {
+                     postalCode = ScheduleAssist.getScanner().next();
                  }
             System.out.println ("Please enter the phone number of the Customer's address. May not contain non-numeric characters or spaces or be longer than 10 digits.");     
             String phone = ScheduleAssist.getScanner().next();
-                 if (DBExceptions.checkForSpacesAndEmpty(phone)) {
-                     return;
+                 while (DBExceptions.checkForSpacesAndEmpty(phone)) {
+                     phone = ScheduleAssist.getScanner().next();
                  }
-                 if (DBExceptions.checkPhoneNumber(phone)) {
-                     addressInsert();
-                     return;
-                 }
-                 else {
+                 while (DBExceptions.checkPhoneNumber(phone)) {
                      
-                 }
-            
+                     phone = ScheduleAssist.getScanner().next();
+                 } 
             
             stmt.setString(1, address);
             stmt.setString(2, address2);
@@ -128,78 +147,39 @@ public class DBInserter {
             stmt.setString(8, ScheduleAssist.getUserLoggedIn());
             
             int recordsEffected = stmt.executeUpdate();
-            System.out.println ("Number of Rows Effected " + recordsEffected + " " + address + " " +  address2 +  " " + cityId + " " +  postalCode + " " + phone );
-            
+            addressInserted = address;
+            address2Inserted = address2;
+            postalCodeInserted = postalCode;
+            phoneInserted = phone;
+            System.out.println ("Customer Created - " + customerNameInserted + " At Address " + addressInserted + " " + address2Inserted + " " + getCity(cityIDInserted) + " " + postalCodeInserted + " Phone Number - " + phoneInserted  );
+            System.out.println ();
         } catch (SQLException ex) {
             Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     public static void cityInsert () { 
-        String insertSQL = "INSERT INTO city"
-                            + "(cityId,city,countryId,createDate,createdBy,lastUpdateBy)VALUES"
-                            + "(?,?,?,?,?,?)";
         
-        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL)) {
-            System.out.println ("Please enter the city of the address. May not contain a space or be blank.");
-            String city = ScheduleAssist.getScanner().next();
-                 if (DBExceptions.checkForSpacesAndEmpty(city)) {
-                     return;
-                 }
-            System.out.println ("Please enter the country ID of the city. May not contain a space or be blank.");     
-            int countryId = Integer.parseInt(ScheduleAssist.getScanner().next());
-                 if (DBExceptions.checkForSpacesAndEmpty(Integer.toString(countryId))) {
-                     return;
-                 }
-                 if (DBExceptions.checkIDNumber(Integer.toString(countryId))) {
-                     return;
-                 }
-                 countryIDInserted = countryId;
-
-            stmt.setInt(1, cityIDInserted);
-            stmt.setString(2, city);
-            stmt.setInt(3,countryIDInserted);
-            stmt.setTimestamp(4, toTimestamp(ZonedDateTime.now()));
-            stmt.setString(5, ScheduleAssist.getUserLoggedIn());
-            stmt.setString(6, ScheduleAssist.getUserLoggedIn());
-            
-            int recordsEffected = stmt.executeUpdate();
-            System.out.println ("Number of Rows Effected " + recordsEffected + " Name of City " + city + " Country ID -  " +  countryIDInserted +  " CityID " + cityIDInserted + " " +  toTimestamp(ZonedDateTime.now()) );
-
-    }
-        catch (SQLException ex) {
-            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
     }
     
     public static void countryInsert () { 
-        String insertSQL = "INSERT INTO country"
-                            + "(countryId,country,createDate,createdBy,lastUpdateBy)VALUES"
-                            + "(?,?,?,?,?)";
         
-        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL)) {
-            System.out.println ("Please enter the country of the address. May not contain a space or be blank.");
-            String country = ScheduleAssist.getScanner().next();
-                 if (DBExceptions.checkForSpacesAndEmpty(country)) {
-                     return;
-                 }
-
-
-            stmt.setInt(1, countryIDInserted);
-            stmt.setString(2, country);
-            stmt.setTimestamp(3, toTimestamp(ZonedDateTime.now()));
-            stmt.setString(4, ScheduleAssist.getUserLoggedIn());
-            stmt.setString(5, ScheduleAssist.getUserLoggedIn());
-            
-            int recordsEffected = stmt.executeUpdate();
-            System.out.println ("Number of Rows Effected " + recordsEffected + " Name of Country " + country + " Country ID -  " +  countryIDInserted + " " + toTimestamp(ZonedDateTime.now()) );
-
     }
-        catch (SQLException ex) {
-            Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+    
+    public static String getCity (int city) {
+       switch (city) { 
+           case 1: String firstCity = "New York, United States";
+                    return firstCity;
+           case 2:String secondtCity = "San Francisco, United States";
+                    return secondtCity;
+           case 3:String thirdCity = "Houston, United States";
+                    return thirdCity;
+           case 4:String fourthCity = "Madrid, Spain";
+                    return fourthCity;
+       }
+     String noCity = "No City Found";
+     return noCity;
     }
     
      public static void StringAddressInsert (String stringAddressToBeInserted, int option) {
@@ -252,35 +232,29 @@ public class DBInserter {
                         Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
                         }
                  break;
-             case 6: String insertSQL6 = "UPDATE city SET city = ? , lastUpdate = ? , lastUpdateBy = ?";
-                        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL6)) { 
-                            stmt.setString(1, stringAddressToBeInserted);
-                            stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
-                            stmt.setString(3, ScheduleAssist.getUserLoggedIn());
-                            int recordsEffected = stmt.executeUpdate();
-                            System.out.println ("Number of Rows Effected " + recordsEffected + " City updated to  " + stringAddressToBeInserted);
-                            }
-                        catch (SQLException ex) {
-                        Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                 break;
-
          }
          
      }
      
      public static void IntAddressInsert (int intAddressToBeInserted) {
-         String insertSQL3 = "UPDATE address SET cityId = ? , lastUpdate = ? , lastUpdateBy = ?";
-            try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL3)) { 
+         
+         
+         String updateSQL = "UPDATE address SET cityId = ? , lastUpdate = ? , lastUpdateBy = ? WHERE address.addressId = (SELECT addressId FROM customer WHERE customerId = '" + DBUpdater.getCustomerID() + " ') ";
+            try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(updateSQL)) { 
                             stmt.setInt(1, intAddressToBeInserted);
                             stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
                             stmt.setString(3, ScheduleAssist.getUserLoggedIn());
                             int recordsEffected = stmt.executeUpdate();
-                            System.out.println ("Number of Rows Effected " + recordsEffected + " " + intAddressToBeInserted);
+                            System.out.println ("Number of Rows Effected " + recordsEffected );
+                            System.out.println ("CityId changed to " + intAddressToBeInserted);
+                            System.out.println ("City and Country Updated to " + getCity(intAddressToBeInserted));
+                              
                             }
                         catch (SQLException ex) {
                         Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
                         }
+
+            
      }
  
 
