@@ -129,7 +129,8 @@ public class DBUpdater {
                           StringAddressInsert(phone,option5);
                           
                       return;
-                  case 6: System.out.println ("Please enter the city of the Customer's address. May not contain a space or be blank..");     
+                      //Change to select city instead of typing a city. Get cities from a list and have user choose it, get ID of city and put that into addressID
+                  case 6: System.out.println ("Please enter the number of the city you want to change for the Customer's address. May not contain a space or be blank..");     
                           String city = ScheduleAssist.getScanner().next();
                           while (DBExceptions.checkForSpacesAndEmpty(city)) {
                             city = ScheduleAssist.getScanner().next();
@@ -139,16 +140,7 @@ public class DBUpdater {
                           StringAddressInsert(city,option6);
                           
                       return;
-                  case 7: System.out.println ("Please enter the country of the Customer's address. May not contain a space or be blank..");     
-                          String country = ScheduleAssist.getScanner().next();
-                          while (DBExceptions.checkForSpacesAndEmpty(country)) {
-                            country = ScheduleAssist.getScanner().next();
-                            
-                            }
-                          int option7 = 7;
-                          StringAddressInsert(country,option7);
-                          
-                      return;     
+     
                        
                }
                String checkAddressID = ScheduleAssist.getScanner().next();

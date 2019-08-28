@@ -264,18 +264,7 @@ public class DBInserter {
                         Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
                         }
                  break;
-             case 7: String insertSQL7 = "UPDATE country SET country = ? , lastUpdate = ? , lastUpdateBy = ? ";
-                        try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL7)) { 
-                            stmt.setString(1, stringAddressToBeInserted);
-                            stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
-                            stmt.setString(3, ScheduleAssist.getUserLoggedIn());
-                            int recordsEffected = stmt.executeUpdate();
-                            System.out.println ("Number of Rows Effected " + recordsEffected + " Country updated to " + stringAddressToBeInserted);
-                            }
-                        catch (SQLException ex) {
-                        Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                 break;
+
          }
          
      }
