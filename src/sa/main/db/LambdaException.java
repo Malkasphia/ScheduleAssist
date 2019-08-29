@@ -7,7 +7,7 @@ package sa.main.db;
 
 /**
  *
- * @author Mal
+ * @author Kyle Nyce
  */
 public interface LambdaException {
 public String errorMessage ();
