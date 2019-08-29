@@ -50,13 +50,11 @@ public class DBUpdater {
             }
                 System.out.println("Please enter the Customer ID of the Customer you wish you update. May not contain spaces or be blank.");
                 String checkID = ScheduleAssist.getScanner().next();
-                 if (DBExceptions.checkForSpacesAndEmpty(checkID)) {
-                     customerUpdate ();
-                     return;
+                 while (DBExceptions.checkForSpacesAndEmpty(checkID)) {
+                     checkID = ScheduleAssist.getScanner().next();
+                     
                  }
                 DBUpdater.idToBeUpdated = Integer.parseInt(checkID);
-                
-                
                 System.out.println("Please Enter the number of the option you wish to update for Customer " + DBUpdater.idToBeUpdated);
                 System.out.println("1. Customer Name");
                 System.out.println("2. Address or Phone");
@@ -68,9 +66,8 @@ public class DBUpdater {
            case 1: 
                System.out.println("Please Enter the new name for Customer " + DBUpdater.idToBeUpdated + ", limit is 40 characters. May not contain spaces or be blank.");
                String checkName = ScheduleAssist.getScanner().next();
-                 if (DBExceptions.checkForSpacesAndEmpty(checkName)) {
-                     customerUpdate ();
-                     return;
+                 while (DBExceptions.checkForSpacesAndEmpty(checkName)) {
+                     checkName = ScheduleAssist.getScanner().next(); 
                  }
                DBUpdater.nameToBeUpdated = checkName;
                DBUpdater.doesNameNeedUpdated = true;
@@ -88,20 +85,20 @@ public class DBUpdater {
                switch (Integer.parseInt(ScheduleAssist.getScanner().next())) { 
                    case 1: System.out.println ("Please enter the street address without apartment number. May not contain a space or be blank.");
                            String address = ScheduleAssist.getScanner().next();
-                           if (DBExceptions.checkForSpacesAndEmpty(address)) {
-                           return;
+                           while (DBExceptions.checkForSpacesAndEmpty(address)) {
+                           address = ScheduleAssist.getScanner().next();
                            }
                            int option1 = 1;
                            StringAddressInsert(address, option1);
-                       return;
+                       break;
                    case 2: System.out.println ("Please enter the apartment or suite of the Customer. May not contain a space or be blank.");     
                            String address2 = ScheduleAssist.getScanner().next();
-                           if (DBExceptions.checkForSpacesAndEmpty(address2)) {
-                           return;
+                           while (DBExceptions.checkForSpacesAndEmpty(address2)) {
+                           address2 = ScheduleAssist.getScanner().next();
                            }
                            int option2 = 2;
                            StringAddressInsert(address2,option2);
-                       return;
+                       break;
                   case 3: System.out.println ("Please enter the number of the city the customer lives in. May not contain a space or be blank.");
                             System.out.println ("1. New York, United States");
                             System.out.println ("2. San Francisco, United States");
@@ -112,15 +109,15 @@ public class DBUpdater {
                           cityId = Integer.parseInt(ScheduleAssist.getScanner().next());
                           }
                           IntAddressInsert(cityId);
-                      return;
+                      break;
                   case 4: System.out.println ("Please enter the postal code of the Customer. May not contain a space or be blank.");     
                           String postalCode = ScheduleAssist.getScanner().next();
-                          if (DBExceptions.checkForSpacesAndEmpty(postalCode)) {
-                          return;  
+                          while (DBExceptions.checkForSpacesAndEmpty(postalCode)) {
+                            postalCode = ScheduleAssist.getScanner().next();
                           }
                           int option4 = 4;
                           StringAddressInsert(postalCode,option4);
-                          return;
+                          break;
                   case 5: System.out.println ("Please enter the phone number of the Customer's address.  May not contain non-numeric characters or spaces or be longer than 10 digits.");     
                           String phone = ScheduleAssist.getScanner().next();
                           while (DBExceptions.checkPhoneNumber(phone) || DBExceptions.checkForSpacesAndEmpty(phone)) {
@@ -130,7 +127,7 @@ public class DBUpdater {
                           int option5 = 5;
                           StringAddressInsert(phone,option5);
                           
-                      return;
+                      break;
                       
                       
                       //Get cities from a list and have user choose it, get ID of city and put that into addressID
@@ -138,9 +135,8 @@ public class DBUpdater {
                        
                }
                String checkAddressID = ScheduleAssist.getScanner().next();
-                 if (DBExceptions.checkForSpacesAndEmpty(checkAddressID)) {
-                     customerUpdate ();
-                     return;
+                 while(DBExceptions.checkForSpacesAndEmpty(checkAddressID)) {
+                     checkAddressID = ScheduleAssist.getScanner().next();
                  }
                DBUpdater.addressIdToBeUpdated = 1;
                DBUpdater.addressIdToBeUpdated = Integer.parseInt(checkAddressID);
@@ -152,9 +148,8 @@ public class DBUpdater {
            case 3:
                System.out.println("Please Enter the new Status ID for Customer " + DBUpdater.idToBeUpdated + ": 0 for inactive, 1 for active.");
                String checkStatusID = ScheduleAssist.getScanner().next();
-                 if (DBExceptions.checkForSpacesAndEmpty(checkStatusID)) {
-                     customerUpdate ();
-                     return;
+                 while (DBExceptions.checkForSpacesAndEmpty(checkStatusID)) {
+                     checkStatusID = ScheduleAssist.getScanner().next();
                  }
                DBUpdater.statusToBeUpdated = Short.parseShort(checkStatusID);
                DBUpdater.doesStatusNeedUpdated = true;
@@ -194,7 +189,7 @@ public class DBUpdater {
             stmtUpdate.setInt(4, DBUpdater.idToBeUpdated);
             
             int recordsEffected = stmtUpdate.executeUpdate();
-            System.out.println ("Number of Rows Effected" +" " + recordsEffected +" Customer " + DBUpdater.idToBeUpdated + " " + DBUpdater.nameToBeUpdated +" " + DBInserter.getCurrentTimeStamp());
+            System.out.println ("Number of Rows Effected" +" " + recordsEffected +" Customer " + DBUpdater.idToBeUpdated + " Name Changed to " + DBUpdater.nameToBeUpdated +" " + DBInserter.getCurrentTimeStamp());
             
         } catch (SQLException ex) {
             Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);

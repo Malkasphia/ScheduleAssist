@@ -30,8 +30,8 @@ public class DBReports {
     public static void appointmentNumberByMonth () {
         System.out.println ("Please enter the number of the month you want to the report for. Please enter a 0 if there is no ten's place (ex - January is 01). May not contain a space or be blank.");
             String MonthOfAppointment = ScheduleAssist.getScanner().next();
-                 if (DBExceptions.checkForSpacesAndEmpty(MonthOfAppointment)) {
-                     return;
+                 while (DBExceptions.checkForSpacesAndEmpty(MonthOfAppointment)) {
+                     MonthOfAppointment = ScheduleAssist.getScanner().next();
                  }
                             System.out.println ("Gathering report for number of appointment types by month for the month of " + MonthOfAppointment);
                             LocalDate currentDay = LocalDate.now();
@@ -46,7 +46,7 @@ public class DBReports {
                                 while (rs.next()) {
                                 String retrievedTitle = rs.getString("title");
                                 retrievedCount = rs.getInt("total");
-                                System.out.println ("Number of Appointments for " + MonthOfAppointment + " 2019 - " + retrievedTitle +  " "+ retrievedCount);  
+                                System.out.println ("Month " + MonthOfAppointment + " 2019 - Appointment Type " + retrievedTitle +  " Number of Appointments "+ retrievedCount);  
                                 
                                 }
                                 
@@ -71,13 +71,14 @@ public class DBReports {
         public static void appointmentDailyScheduleForConsultant () {
             LocalDate currentDay = LocalDate.now();
             System.out.println ("Gathering list of appointments today for all consultants" );
-            String selectSQL = "SELECT title, createdBy FROM appointment WHERE start LIKE '"+currentDay+"%' ORDER BY createdBy";
+            String selectSQL = "SELECT title, start, createdBy FROM appointment WHERE start LIKE '"+currentDay+"%' ORDER BY createdBy";
                             try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
                                 ResultSet rs = stmt.executeQuery(selectSQL);
                                 while (rs.next()) {
                                 String retrievedTitle = rs.getString("title");
                                 String retrievedCreatedBy = rs.getString("createdBy");
-                                System.out.println ("Appointment Title - " + retrievedTitle + "Consultant Scheduled - " + retrievedCreatedBy );  
+                                Timestamp retrievedStartDate = rs.getTimestamp("start");
+                                System.out.println ("Appointment Type - " + retrievedTitle + "Consultant Scheduled - " + retrievedCreatedBy + " Start Time of Appointment - " + retrievedStartDate );  
                                 
                                 }
  

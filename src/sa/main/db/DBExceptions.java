@@ -18,6 +18,7 @@ public class DBExceptions {
     static String isNotNumeric = "You have entered a non-numeric character for the phone number. Please re-enter data.";
     static String isNotNumericID = "You have entered a non-numeric character for the ID. Please re-enter data.";
     static String isBiggerThanTenDigits = "You have entered a phone number that is larger than 10 digits. Please re-enter data.";
+    static String isSmallerThanTenDigits = "You have entered a phone number that is smaller than 10 digits. Please re-enter data.";
     
     public static String isInvalidData () 
     {return invalidData;}
@@ -33,6 +34,9 @@ public class DBExceptions {
     
     public static String isBiggerThanTenDigitsDetected () 
     {return isBiggerThanTenDigits;}
+    
+    public static String isSmallerThanTenDigitsDetected () 
+    {return isSmallerThanTenDigits;}
     
     public static String isNotNumericIDDetected() 
     {return isNotNumericID;}
@@ -110,6 +114,25 @@ public class DBExceptions {
                             System.out.println (ex);
                             return true;
                         }
+        }
+        
+        
+        if (phoneNumber.length() < 10) {
+            {
+            try 
+                        {
+                            
+                            LambdaException LEisSmallerThanTenDigits = () -> DBExceptions.isSmallerThanTenDigitsDetected();
+                            String showMessage = LEisSmallerThanTenDigits.errorMessage();
+                            throw new Exception(showMessage);
+                        }
+                        catch (Exception ex) 
+                        {
+                            System.out.println (ex);
+                            return true;
+                        }
+        }
+            
         }
         return false;
     }
