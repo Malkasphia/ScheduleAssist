@@ -12,6 +12,8 @@ import java.sql.Timestamp;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,7 +80,18 @@ public class DBReports {
                                 String retrievedTitle = rs.getString("title");
                                 String retrievedCreatedBy = rs.getString("createdBy");
                                 Timestamp retrievedStartDate = rs.getTimestamp("start");
-                                System.out.println ("Appointment Type - " + retrievedTitle + "Consultant Scheduled - " + retrievedCreatedBy + " Start Time of Appointment - " + retrievedStartDate );  
+                                
+                                ZonedDateTime zdtUTC= ZonedDateTime.ofInstant(retrievedStartDate.toInstant(), ZoneId.of("Z"));
+               
+                                ZonedDateTime zdt= ZonedDateTime.ofInstant(retrievedStartDate.toInstant(), ZonedDateTime.now().getZone());
+                                ZonedDateTime ConvertedZoneDateTimeUTC = zdtUTC.withZoneSameLocal(ZonedDateTime.now().getZone());
+               
+                                ZonedDateTime ConvertedZoneDateTime = zdt.withZoneSameLocal(ZonedDateTime.now().getZone());
+                                LocalDateTime ldt = ConvertedZoneDateTime.toLocalDateTime();
+                                System.out.println ("Appointment Type - " + retrievedTitle + "Consultant Scheduled - " + retrievedCreatedBy ); 
+                                System.out.println(" Original Appointment Date - " + ldt);
+                                System.out.println(" Appointment Start Date Modified by your Time Zone - " + ConvertedZoneDateTimeUTC);
+                                 
                                 
                                 }
  

@@ -184,7 +184,7 @@ public class DBInserter {
     
      public static void StringAddressInsert (String stringAddressToBeInserted, int option) {
          switch (option) {
-             case 1: String insertSQL1 = "UPDATE address SET address = ? , lastUpdate = ? , lastUpdateBy = ?";
+             case 1: String insertSQL1 = "UPDATE address SET address = ? , lastUpdate = ? , lastUpdateBy = ? WHERE addressId = '"+DBUpdater.getCustomerID()+"'";
                         try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL1)) { 
                             stmt.setString(1, stringAddressToBeInserted);
                             stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
@@ -196,7 +196,7 @@ public class DBInserter {
                         Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
                         }
                  break;
-             case 2: String insertSQL2 = "UPDATE address SET address2 = ? , lastUpdate = ? , lastUpdateBy = ?";
+             case 2: String insertSQL2 = "UPDATE address SET address2 = ? , lastUpdate = ? , lastUpdateBy = ? WHERE addressId = '"+DBUpdater.getCustomerID()+"'";
                         try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL2)) { 
                             stmt.setString(1, stringAddressToBeInserted);
                             stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
@@ -208,7 +208,7 @@ public class DBInserter {
                         Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
                         }
                  break;
-             case 4: String insertSQL4 = "UPDATE address SET postalCode = ? , lastUpdate = ? , lastUpdateBy = ?";
+             case 4: String insertSQL4 = "UPDATE address SET postalCode = ? , lastUpdate = ? , lastUpdateBy = ? WHERE addressId = '"+DBUpdater.getCustomerID()+"'";
                         try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL4)) { 
                             stmt.setString(1, stringAddressToBeInserted);
                             stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
@@ -220,7 +220,7 @@ public class DBInserter {
                         Logger.getLogger(DBLogin.class.getName()).log(Level.SEVERE, null, ex);
                         }
                  break;
-             case 5: String insertSQL5 = "UPDATE address SET phone = ? , lastUpdate = ? , lastUpdateBy = ?";
+             case 5: String insertSQL5 = "UPDATE address SET phone = ? , lastUpdate = ? , lastUpdateBy = ? WHERE addressId = '"+DBUpdater.getCustomerID()+"'";
                         try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(insertSQL5)) { 
                             stmt.setString(1, stringAddressToBeInserted);
                             stmt.setTimestamp(2, toTimestamp(ZonedDateTime.now()));
