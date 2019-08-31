@@ -105,12 +105,21 @@ public class DBReports {
         
                 public static void allCustomersReport () {
             System.out.println ("Gathering list of all customers." );
-            String selectSQL = "SELECT customerName FROM customer ";
+            String selectSQL = "SELECT customer.customerName,address.address,address.address2,address.postalCode,address.phone,city.city,country.country FROM customer,address,city,country "
+                    + " WHERE customer.customerId = address.addressId "
+                    + " AND address.cityId = city.cityId"
+                    + " AND city.countryId = country.countryId";
                             try (PreparedStatement stmt = DBConnector.startConnecting().prepareStatement(selectSQL)) {
                                 ResultSet rs = stmt.executeQuery(selectSQL);
                                 while (rs.next()) {
-                                String retrievedCustomerName = rs.getString("customerName");
-                                System.out.println ("Customer Name - " + retrievedCustomerName );  
+                                String retrievedCustomerName = rs.getString("customer.customerName");
+                                String retrievedAddress = rs.getString("address.address");
+                                String retrievedAddress2 = rs.getString("address.address2");
+                                String retrievedpostalCode = rs.getString("address.postalCode");
+                                String retrievedCity = rs.getString("city.city");
+                                String retrievedCountry = rs.getString("country.country");
+                                String retrievedPhone = rs.getString("address.phone");
+                                System.out.println ("Customer Name - " + retrievedCustomerName + " Phone Number - " + retrievedPhone + " Address - "+ retrievedAddress +" "+ retrievedAddress2 +" "+ retrievedpostalCode +" "+  retrievedCity +" "+ retrievedCountry );  
                                 
                                 }
    
